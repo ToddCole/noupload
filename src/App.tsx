@@ -195,8 +195,9 @@ export function App() {
       <section className="workspace">
         <header className="topbar">
           <div>
-            <p className="eyebrow">Local web assets</p>
-            <h1>Image Shrinker</h1>
+            <p className="eyebrow">Local & private</p>
+            <h1>Squish</h1>
+            <p className="tagline">Big photos in, tiny files out. Nothing leaves your machine.</p>
           </div>
           <div className="topbar-actions">
             <button className="icon-button" type="button" onClick={clearJobs} disabled={jobs.length === 0} title="Clear">
@@ -303,7 +304,7 @@ export function App() {
               disabled={jobs.length === 0 || hasProcessing}
             >
               {hasProcessing ? <Loader2 className="spin" size={18} /> : <ImageIcon size={18} />}
-              Shrink
+              Squish
             </button>
           </aside>
 
@@ -334,8 +335,8 @@ export function App() {
             />
             <Images size={38} />
             <div>
-              <h2>Drop images</h2>
-              <p>JPEG, PNG, and WebP stay on this machine.</p>
+              <h2>Drop 'em</h2>
+              <p>JPEG, PNG, and WebP get squished right here — nothing uploaded, nothing tracked.</p>
             </div>
           </section>
 
