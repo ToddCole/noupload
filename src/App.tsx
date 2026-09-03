@@ -644,6 +644,39 @@ export function App() {
             </div>
           </div>
         </section>
+
+        <section className="band band-tray" id="legal">
+          <div className="wrap">
+            <div className="section-head">
+              <h2>Privacy &amp; terms</h2>
+            </div>
+
+            <div className="why-body legal-body">
+              <p>
+                <b>What NoUpload collects:</b> nothing. Your images are never uploaded — they're resized and
+                compressed entirely in your browser and never touch a server. There's no account, no sign-in, and
+                no server-side storage of anything you process.
+              </p>
+              <p>
+                <b>What this site collects:</b> standard web analytics via Google Analytics, which uses cookies and
+                may record your approximate location, device/browser type, and the pages you visit, to help us
+                understand traffic. If this site ever shows ads, Google and its advertising partners may also use
+                cookies to personalize them. You can block or clear cookies in your browser at any time.
+              </p>
+              <p>
+                <b>Terms:</b> NoUpload is provided free, as-is, with no warranty of any kind. Use it at your own
+                risk.
+              </p>
+              <p>
+                <b>Contact:</b> this is an open-source, one-person project — the best way to reach us is to{' '}
+                <a href="https://github.com/ToddCole/noupload/issues" target="_blank" rel="noreferrer">
+                  open an issue on GitHub
+                </a>
+                . The full source is public, so you can see exactly what the code does.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer>
@@ -654,8 +687,12 @@ export function App() {
           <div className="foot-links">
             <a href="#why">Why it's safe</a>
             <a href="#tool">Open the tool</a>
+            <a href="#legal">Privacy &amp; terms</a>
             <a href="https://github.com/ToddCole/noupload" target="_blank" rel="noreferrer">
               View source
+            </a>
+            <a href="https://github.com/ToddCole/noupload/issues" target="_blank" rel="noreferrer">
+              Report an issue
             </a>
           </div>
         </div>

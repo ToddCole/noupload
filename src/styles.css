@@ -340,6 +340,20 @@ section.band#faq {
   font-weight: 600;
 }
 
+.legal-body {
+  max-width: 68ch;
+}
+
+.legal-body a {
+  color: var(--accent-bright);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.legal-body a:hover {
+  color: var(--paper);
+}
+
 .facts {
   list-style: none;
   margin: 24px 0 0;
@@ -430,7 +444,8 @@ footer .wrap {
 
 .foot-links {
   display: flex;
-  gap: 22px;
+  flex-wrap: wrap;
+  gap: 12px 22px;
   font-size: 0.84rem;
   color: var(--ash);
 }
