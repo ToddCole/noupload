@@ -70,6 +70,8 @@ export function App() {
   const [isDragging, setIsDragging] = useState(false);
   const [isZipping, setIsZipping] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
+  const [bulkName, setBulkName] = useState('');
 
   const selectedJob = useMemo(
     () => jobs.find((job) => job.id === selectedId) ?? jobs[0],
@@ -164,6 +166,7 @@ export function App() {
     });
     setJobs([]);
     setSelectedId(null);
+    setCheckedIds(new Set());
   };
 
   const removeJob = (id: string) => {
@@ -178,6 +181,65 @@ export function App() {
       return current.filter((job) => job.id !== id);
     });
     setSelectedId((current) => (current === id ? null : current));
+    setCheckedIds((current) => {
+      if (!current.has(id)) {
+        return current;
+      }
+      const next = new Set(current);
+      next.delete(id);
+      return next;
+    });
+  };
+
+  const toggleChecked = (id: string) => {
+    setCheckedIds((current) => {
+      const next = new Set(current);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    setCheckedIds((current) => (current.size === jobs.length ? new Set() : new Set(jobs.map((job) => job.id))));
+  };
+
+  const bulkRenameSelected = () => {
+    const trimmed = bulkName.trim();
+    if (!trimmed || checkedIds.size === 0) {
+      return;
+    }
+
+    const selectedCount = jobs.filter((job) => checkedIds.has(job.id)).length;
+    const padWidth = Math.max(2, String(selectedCount).length);
+    let counter = 0;
+
+    setJobs((current) =>
+      current.map((job) => {
+        if (!checkedIds.has(job.id)) {
+          return job;
+        }
+
+        counter += 1;
+        if (job.outputPreviewUrl) {
+          URL.revokeObjectURL(job.outputPreviewUrl);
+        }
+
+        return {
+          ...job,
+          outputName: selectedCount === 1 ? trimmed : `${trimmed}-${String(counter).padStart(padWidth, '0')}`,
+          status: job.result ? 'queued' : job.status,
+          result: undefined,
+          outputPreviewUrl: undefined,
+        };
+      }),
+    );
+
+    setCheckedIds(new Set());
+    setBulkName('');
   };
 
   const renameJob = (id: string, outputName: string) => {
@@ -490,6 +552,42 @@ export function App() {
                   </button>
                 </div>
 
+                {jobs.length > 0 ? (
+                  <div className="bulk-rename-bar">
+                    <label className="bulk-select-all">
+                      <input
+                        type="checkbox"
+                        checked={checkedIds.size === jobs.length}
+                        onChange={toggleSelectAll}
+                        aria-label="Select all images"
+                      />
+                      <span>{checkedIds.size > 0 ? `${checkedIds.size} selected` : 'Select all'}</span>
+                    </label>
+                    <input
+                      className="bulk-rename-input"
+                      type="text"
+                      value={bulkName}
+                      onChange={(event) => setBulkName(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                          bulkRenameSelected();
+                        }
+                      }}
+                      placeholder="Rename selected to…"
+                      aria-label="Bulk rename value"
+                    />
+                    <button
+                      type="button"
+                      className="bulk-rename-btn"
+                      onClick={bulkRenameSelected}
+                      disabled={checkedIds.size === 0 || bulkName.trim().length === 0}
+                    >
+                      <FilePenLine size={15} />
+                      Rename
+                    </button>
+                  </div>
+                ) : null}
+
                 <div className="job-list">
                   {jobs.length === 0 ? (
                     <div className="empty-list">No images loaded</div>
@@ -500,6 +598,14 @@ export function App() {
                         key={job.id}
                         onClick={() => setSelectedId(job.id)}
                       >
+                        <input
+                          type="checkbox"
+                          className="job-check-input"
+                          checked={checkedIds.has(job.id)}
+                          onChange={() => toggleChecked(job.id)}
+                          onClick={(event) => event.stopPropagation()}
+                          aria-label={`Select ${job.file.name} for bulk rename`}
+                        />
                         <img src={job.previewUrl} alt="" />
                         <div className="job-main">
                           <strong>{job.file.name}</strong>
