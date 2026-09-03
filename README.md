@@ -1,4 +1,4 @@
-No Upload
+# NoUpload
 
 Big photos in, tiny files out. A local, in-browser tool for squishing oversized images — Shutterstock exports, camera dumps, whatever — down to web-friendly sizes.
 
