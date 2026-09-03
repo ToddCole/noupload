@@ -561,7 +561,10 @@ export function App() {
 
             <div className="frames">
               <div className="frame">
-                <span className="frame-count">01 / Load</span>
+                <span className="frame-num" aria-hidden="true">
+                  01
+                </span>
+                <span className="frame-verb">Load</span>
                 <svg className="frame-icon" viewBox="0 0 34 34" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M6 13 17 4l11 9" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M6 13v15h22V13" strokeLinecap="round" strokeLinejoin="round" />
@@ -571,7 +574,10 @@ export function App() {
                 <p>JPEG, PNG, or WebP. Batch as many as you like, all at once.</p>
               </div>
               <div className="frame">
-                <span className="frame-count">02 / Develop</span>
+                <span className="frame-num" aria-hidden="true">
+                  02
+                </span>
+                <span className="frame-verb">Develop</span>
                 <svg className="frame-icon" viewBox="0 0 34 34" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <circle cx="17" cy="17" r="12" />
                   <circle cx="17" cy="17" r="4.5" />
@@ -581,7 +587,10 @@ export function App() {
                 <p>Your browser does the resizing and compressing. Nothing is transmitted, ever.</p>
               </div>
               <div className="frame">
-                <span className="frame-count">03 / Collect</span>
+                <span className="frame-num" aria-hidden="true">
+                  03
+                </span>
+                <span className="frame-verb">Collect</span>
                 <svg className="frame-icon" viewBox="0 0 34 34" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M6 15V8a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v7" strokeLinecap="round" />
                   <rect x="5" y="15" width="24" height="12" rx="2" />

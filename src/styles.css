@@ -274,19 +274,42 @@ section.band#faq {
 
 .frame {
   background: var(--ink);
-  padding: 30px 26px 32px;
+  padding: 34px 26px 32px;
+  position: relative;
+  overflow: hidden;
 }
 
-.frame-count {
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  color: var(--accent-bright);
-  letter-spacing: 0.04em;
-  margin-bottom: 18px;
+.frame-num {
+  position: absolute;
+  top: -0.18em;
+  right: -0.04em;
+  font-family: var(--display);
+  font-size: clamp(4.2rem, 7vw, 6.2rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--paper);
+  opacity: 0.07;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.frame-verb {
+  position: relative;
+  z-index: 1;
   display: block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  margin-bottom: 22px;
 }
 
 .frame-icon {
+  position: relative;
+  z-index: 1;
   width: 34px;
   height: 34px;
   margin-bottom: 20px;
@@ -294,6 +317,8 @@ section.band#faq {
 }
 
 .frame h3 {
+  position: relative;
+  z-index: 1;
   font-family: var(--body);
   font-size: 1.05rem;
   font-weight: 600;
@@ -301,6 +326,8 @@ section.band#faq {
 }
 
 .frame p {
+  position: relative;
+  z-index: 1;
   color: var(--ash);
   font-size: 0.94rem;
 }
