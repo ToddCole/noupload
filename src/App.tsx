@@ -6,7 +6,9 @@ import {
   FilePenLine,
   Image as ImageIcon,
   Images,
+  Laptop,
   Loader2,
+  Lock,
   RotateCcw,
   SlidersHorizontal,
   Upload,
@@ -236,6 +238,16 @@ export function App() {
         <section className="hero">
           <div className="wrap">
             <div>
+              <div className="hero-badges">
+                <span className="hero-badge">
+                  <Lock size={15} />
+                  Private
+                </span>
+                <span className="hero-badge">
+                  <Laptop size={15} />
+                  Local
+                </span>
+              </div>
               <h1>
                 Shrink your photos without ever <em>sending them anywhere</em>.
               </h1>

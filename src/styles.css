@@ -200,6 +200,26 @@ footer .logo-mark img {
   max-width: 700px;
 }
 
+.hero-badges {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border: 1px solid var(--accent);
+  background: var(--accent-dim);
+  border-radius: 999px;
+  color: var(--accent-bright);
+  font-family: var(--display);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
 .hero h1 {
   font-size: clamp(2.3rem, 4.4vw, 3.6rem);
   line-height: 1.08;
