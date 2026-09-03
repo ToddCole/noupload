@@ -654,7 +654,7 @@ export function App() {
           <div className="foot-links">
             <a href="#why">Why it's safe</a>
             <a href="#tool">Open the tool</a>
-            <a href="https://github.com/ToddCole/squish" target="_blank" rel="noreferrer">
+            <a href="https://github.com/ToddCole/noupload" target="_blank" rel="noreferrer">
               View source
             </a>
           </div>
