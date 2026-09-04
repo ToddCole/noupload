@@ -235,12 +235,34 @@ footer .logo-mark img {
   font-size: 1.08rem;
   color: var(--ash);
   max-width: 46ch;
-  margin-bottom: 30px;
+  margin-bottom: 22px;
 }
 
 .hero-sub b {
   color: var(--paper);
   font-weight: 600;
+}
+
+.hero-examples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 26px;
+}
+
+.hero-examples-label {
+  color: var(--ash);
+  font-size: 0.86rem;
+  margin-right: 2px;
+}
+
+.example-chip {
+  border: 1px solid var(--hairline-strong);
+  border-radius: 999px;
+  color: var(--ash);
+  font-size: 0.8rem;
+  padding: 5px 12px;
 }
 
 .hero-ctas {

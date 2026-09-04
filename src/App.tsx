@@ -317,6 +317,14 @@ export function App() {
                 NoUpload resizes and compresses images entirely in your browser — like developing your own film
                 instead of dropping it at a lab. <b>Nothing leaves your device</b>, not even for a second.
               </p>
+              <div className="hero-examples">
+                <span className="hero-examples-label">Ideal for:</span>
+                <span className="example-chip">ID &amp; passport scans</span>
+                <span className="example-chip">Legal documents</span>
+                <span className="example-chip">Medical records</span>
+                <span className="example-chip">Client work under NDA</span>
+                <span className="example-chip">Unreleased products</span>
+              </div>
               <div className="hero-ctas">
                 <a className="btn btn-primary" href="#tool">
                   Try it — drop a photo below
