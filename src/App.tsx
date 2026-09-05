@@ -315,7 +315,7 @@ export function App() {
               </h1>
               <p className="hero-sub">
                 NoUpload resizes and compresses images entirely in your browser — like developing your own film
-                instead of dropping it at a lab. <b>Nothing leaves your device</b>, not even for a second.
+                instead of dropping it at a lab. <b>Your images stay on your device</b>, not even touching a server.
               </p>
               <div className="hero-examples">
                 <span className="hero-examples-label">Ideal for:</span>
@@ -343,7 +343,7 @@ export function App() {
             <div className="tool-head">
               <div>
                 <h2>Try it — everything below runs on your machine.</h2>
-                <p>right here, in this tab — nothing is sent anywhere</p>
+                <p>right here, in this tab — your images are not sent anywhere</p>
               </div>
               <div className="tool-actions">
                 <button
@@ -745,7 +745,7 @@ export function App() {
               <ul className="facts">
                 <li>No uploads, at any point in the process</li>
                 <li>No account, no sign-in, no email required</li>
-                <li>No analytics that track what you process</li>
+                <li>No analytics events include your images or filenames</li>
                 <li>No server ever holds a copy of your images</li>
               </ul>
             </div>

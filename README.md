@@ -2,7 +2,7 @@
 
 Big photos in, tiny files out. A local, in-browser tool for squishing oversized images — Shutterstock exports, camera dumps, whatever — down to web-friendly sizes.
 
-Everything happens on-device via `<canvas>`. Nothing is uploaded, nothing is tracked.
+Image processing happens on-device via `<canvas>`. Your images are not uploaded, stored, or processed on a server.
 
 ## Features
 
