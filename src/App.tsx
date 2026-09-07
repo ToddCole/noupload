@@ -154,9 +154,6 @@ export function App() {
             <RouteLink className={`nav-link ${route === '/compress' ? 'is-active' : ''}`} href="/compress">
               Image Compressor
             </RouteLink>
-            <a className="nav-link" href="https://github.com/ToddCole/noupload" target="_blank" rel="noreferrer">
-              Source
-            </a>
           </nav>
         </div>
       </header>
@@ -178,7 +175,7 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
     <>
       <section className="suite-hero">
         <div className="wrap suite-hero-grid">
-          <div>
+          <div className="suite-hero-copy">
             <div className="hero-badges">
               <span className="hero-badge">
                 <Lock size={15} />
@@ -198,28 +195,93 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
                 <ShieldCheck size={16} />
                 Open Meta Stripper
               </RouteLink>
+              <RouteLink className="btn btn-ghost" href="/redact">
+                <ScanLine size={16} />
+                Open Redactor
+              </RouteLink>
               <RouteLink className="btn btn-ghost" href="/compress">
                 <ImageIcon size={16} />
                 Open Image Compressor
               </RouteLink>
             </div>
-            <p className="hero-note">Google Analytics is page-view only; file details are not sent.</p>
+            <div className="trust-strip" aria-label="Privacy promises">
+              <span>Runs in your browser</span>
+              <span>No account</span>
+              <span>No file uploads</span>
+              <span>Page-view analytics only</span>
+            </div>
           </div>
-          <div className="suite-signal" aria-hidden="true">
-            <div className="signal-row">
-              <FileSearch size={22} />
-              <span>Inspect</span>
-              <CheckCircle2 size={18} />
+
+          <div className="suite-demo" aria-label="NoUpload local image workflow preview">
+            <div className="demo-header">
+              <div>
+                <span>NoUpload workflow</span>
+                <strong>Local session</strong>
+              </div>
+              <span className="demo-status">No upload path</span>
             </div>
-            <div className="signal-row">
-              <ShieldCheck size={22} />
-              <span>Clean</span>
-              <CheckCircle2 size={18} />
+            <div className="demo-grid">
+              <div className="demo-panel meta-demo">
+                <div className="demo-panel-head">
+                  <ShieldCheck size={17} />
+                  <span>Metadata stripped</span>
+                </div>
+                <div className="demo-meta-row">
+                  <span>gps / Latitude</span>
+                  <b>Removed</b>
+                </div>
+                <div className="demo-meta-row">
+                  <span>exif / Camera Model</span>
+                  <b>Removed</b>
+                </div>
+                <div className="demo-meta-row is-muted">
+                  <span>file / Image Width</span>
+                  <b>Structural</b>
+                </div>
+              </div>
+              <div className="demo-panel redact-demo">
+                <div className="demo-panel-head">
+                  <ScanLine size={17} />
+                  <span>Sensitive areas covered</span>
+                </div>
+                <div className="demo-photo">
+                  <span className="demo-person one" />
+                  <span className="demo-person two" />
+                  <span className="demo-box black" />
+                  <span className="demo-box blur" />
+                  <span className="demo-box pixel" />
+                </div>
+              </div>
+              <div className="demo-panel compress-demo">
+                <div className="demo-panel-head">
+                  <ImageIcon size={17} />
+                  <span>File size reduced</span>
+                </div>
+                <div className="size-stat">
+                  <span>Original</span>
+                  <b>4.8 MB</b>
+                </div>
+                <div className="size-bar">
+                  <span style={{ width: '100%' }} />
+                </div>
+                <div className="size-stat">
+                  <span>Output</span>
+                  <b>612 KB</b>
+                </div>
+                <div className="size-bar output">
+                  <span style={{ width: '22%' }} />
+                </div>
+              </div>
             </div>
-            <div className="signal-row">
-              <Download size={22} />
-              <span>Download</span>
-              <CheckCircle2 size={18} />
+            <div className="demo-footer">
+              <span>
+                <CheckCircle2 size={15} />
+                Files stay on-device
+              </span>
+              <span>
+                <Download size={15} />
+                Clean exports
+              </span>
             </div>
           </div>
         </div>
@@ -232,22 +294,31 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
           </div>
           <div className="tool-cards">
             <RouteLink className="tool-card primary-tool" href="/meta-stripper">
-              <ShieldCheck size={28} />
+              <span className="tool-icon">
+                <ShieldCheck size={28} />
+              </span>
               <div>
+                <span className="tool-kicker">Start here</span>
                 <h3>Image Meta Stripper</h3>
                 <p>Show image metadata, strip it, and download a cleaned copy.</p>
               </div>
             </RouteLink>
             <RouteLink className="tool-card" href="/compress">
-              <ImageIcon size={28} />
+              <span className="tool-icon">
+                <ImageIcon size={28} />
+              </span>
               <div>
+                <span className="tool-kicker">Resize</span>
                 <h3>Image Compressor</h3>
                 <p>Resize and compress JPEG, PNG, and WebP images locally.</p>
               </div>
             </RouteLink>
             <RouteLink className="tool-card" href="/redact">
-              <ScanLine size={28} />
+              <span className="tool-icon">
+                <ScanLine size={28} />
+              </span>
               <div>
+                <span className="tool-kicker">Cover details</span>
                 <h3>Image Redactor</h3>
                 <p>Cover sensitive areas manually, then export a flattened image.</p>
               </div>
