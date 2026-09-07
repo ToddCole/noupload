@@ -1541,8 +1541,8 @@ input[type="range"] {
 }
 
 .redaction-box.mode-blur {
-  backdrop-filter: blur(12px);
-  background: rgba(238, 241, 245, 0.08);
+  backdrop-filter: blur(64px);
+  background: rgba(9, 17, 31, 0.34);
 }
 
 .redaction-box.mode-pixelate {

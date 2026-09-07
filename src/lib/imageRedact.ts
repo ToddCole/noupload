@@ -19,6 +19,9 @@ export interface DraftRect {
 }
 
 const MIN_RECT_SIZE = 0.01;
+const BLUR_RADIUS_PX = 72;
+const BLUR_DOWNSAMPLE_RATIO = 0.025;
+const BLUR_VEIL_ALPHA = 0.18;
 
 export function normalizeRedactionRect(draft: DraftRect, mode: RedactionMode, id: string): RedactionRect | null {
   const x = clamp01(Math.min(draft.startX, draft.currentX));
@@ -110,10 +113,7 @@ function applyRedaction(context: CanvasRenderingContext2D, canvas: HTMLCanvasEle
   regionContext.drawImage(canvas, x, y, width, height, 0, 0, width, height);
 
   if (rect.mode === 'blur') {
-    context.save();
-    context.filter = 'blur(18px)';
-    context.drawImage(region, x, y, width, height);
-    context.restore();
+    applyBlurRedaction(context, region, x, y, width, height);
     return;
   }
 
@@ -136,6 +136,47 @@ function applyRedaction(context: CanvasRenderingContext2D, canvas: HTMLCanvasEle
   context.imageSmoothingEnabled = false;
   context.drawImage(pixelCanvas, 0, 0, smallWidth, smallHeight, x, y, width, height);
   context.imageSmoothingEnabled = true;
+}
+
+function applyBlurRedaction(
+  context: CanvasRenderingContext2D,
+  region: HTMLCanvasElement,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+): void {
+  const smallWidth = Math.max(1, Math.round(width * BLUR_DOWNSAMPLE_RATIO));
+  const smallHeight = Math.max(1, Math.round(height * BLUR_DOWNSAMPLE_RATIO));
+  const smallCanvas = document.createElement('canvas');
+  smallCanvas.width = smallWidth;
+  smallCanvas.height = smallHeight;
+  const smallContext = smallCanvas.getContext('2d');
+
+  const privacyCanvas = document.createElement('canvas');
+  privacyCanvas.width = width;
+  privacyCanvas.height = height;
+  const privacyContext = privacyCanvas.getContext('2d');
+
+  if (!smallContext || !privacyContext) {
+    context.fillStyle = '#05070d';
+    context.fillRect(x, y, width, height);
+    return;
+  }
+
+  smallContext.imageSmoothingEnabled = true;
+  smallContext.drawImage(region, 0, 0, smallWidth, smallHeight);
+
+  privacyContext.imageSmoothingEnabled = false;
+  privacyContext.drawImage(smallCanvas, 0, 0, smallWidth, smallHeight, 0, 0, width, height);
+  privacyContext.save();
+  privacyContext.filter = `blur(${BLUR_RADIUS_PX}px)`;
+  privacyContext.drawImage(privacyCanvas, 0, 0);
+  privacyContext.restore();
+  privacyContext.fillStyle = `rgba(5, 7, 13, ${BLUR_VEIL_ALPHA})`;
+  privacyContext.fillRect(0, 0, width, height);
+
+  context.drawImage(privacyCanvas, x, y);
 }
 
 function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> {
