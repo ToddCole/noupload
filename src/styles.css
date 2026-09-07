@@ -1626,6 +1626,200 @@ input[type="range"] {
   white-space: nowrap;
 }
 
+/* ---------- share-safe workflow ---------- */
+.share-safe-layout {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 300px minmax(0, 1fr);
+}
+
+.share-safe-summary {
+  align-self: start;
+}
+
+.workflow-steps {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+}
+
+.workflow-steps li {
+  align-items: center;
+  color: var(--ash);
+  display: flex;
+  gap: 10px;
+  font-family: var(--display);
+  font-weight: 700;
+}
+
+.workflow-steps li span {
+  align-items: center;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 50%;
+  display: inline-flex;
+  height: 26px;
+  justify-content: center;
+  width: 26px;
+}
+
+.workflow-steps li.is-active,
+.workflow-steps li.is-done {
+  color: var(--paper);
+}
+
+.workflow-steps li.is-done span {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent-bright);
+}
+
+.share-safe-workspace {
+  display: grid;
+  gap: 16px;
+}
+
+.share-safe-upload,
+.share-safe-report,
+.verification-panel {
+  background: var(--tray);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.share-safe-upload {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+  min-height: 126px;
+}
+
+.share-safe-upload.is-dragging {
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 2px var(--accent-dim);
+}
+
+.share-safe-upload input {
+  display: none;
+}
+
+.share-safe-upload > svg {
+  color: var(--accent-bright);
+  flex: 0 0 auto;
+}
+
+.share-safe-upload img {
+  border-radius: 6px;
+  height: 82px;
+  object-fit: cover;
+  width: 108px;
+}
+
+.share-safe-upload div {
+  flex: 1;
+}
+
+.share-safe-upload h3,
+.share-safe-report h2,
+.verification-panel h2 {
+  font-family: var(--display);
+  margin: 0 0 6px;
+}
+
+.share-safe-upload p,
+.share-safe-report > p,
+.verification-panel > p {
+  color: var(--ash);
+  margin: 0;
+}
+
+.share-safe-report-head {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.share-safe-checks {
+  border: 1px solid var(--hairline);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 20px 0;
+}
+
+.share-safe-checks div {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+}
+
+.share-safe-checks div + div {
+  border-left: 1px solid var(--hairline);
+}
+
+.share-safe-checks strong {
+  color: var(--paper);
+  font: 700 1.35rem var(--display);
+}
+
+.share-safe-checks span,
+.verification-details span {
+  color: var(--ash);
+  font-size: 0.84rem;
+}
+
+.share-safe-next {
+  align-items: center;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top: 18px;
+}
+
+.share-safe-next span {
+  color: var(--ash);
+}
+
+.verification-panel.is-passed {
+  border-color: #22c55e;
+}
+
+.verification-panel.is-passed .share-safe-report-head > svg {
+  color: #4ade80;
+}
+
+.verification-panel.is-warning {
+  border-color: #eab308;
+}
+
+.verification-panel.is-warning .share-safe-report-head > svg {
+  color: #facc15;
+}
+
+.verification-details {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.verification-details span {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.verification-details b,
+.verification-details code {
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
 /* ---------- image redactor ---------- */
 
 .redactor-grid {
@@ -1808,6 +2002,7 @@ input[type="range"] {
   .suite-hero-grid,
   .tool-hero-inner,
   .privacy-grid,
+  .share-safe-layout,
   .redactor-grid {
     grid-template-columns: 1fr;
   }
@@ -1956,6 +2151,29 @@ input[type="range"] {
   }
 
   .redactor-empty {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .share-safe-upload {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .share-safe-upload .btn {
+    width: 100%;
+  }
+
+  .share-safe-checks {
+    grid-template-columns: 1fr;
+  }
+
+  .share-safe-checks div + div {
+    border-left: 0;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .share-safe-next {
     align-items: flex-start;
     flex-direction: column;
   }

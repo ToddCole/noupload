@@ -13,6 +13,12 @@ export const SEO_BY_ROUTE = {
       'Strip image metadata, redact sensitive areas, and compress images entirely in your browser. Your files never leave your device.',
     path: '/',
   },
+  '/share-safe': {
+    title: 'Share-Safe Image Cleaner - Strip, Check, and Verify | NoUpload',
+    description:
+      'Prepare images before sharing: inspect metadata, remove hidden image details, and verify the cleaned copy entirely in your browser.',
+    path: '/share-safe',
+  },
   '/meta-stripper': {
     title: 'Image Meta Stripper - Strip Image Metadata Locally | NoUpload',
     description:

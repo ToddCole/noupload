@@ -21,6 +21,14 @@
       "destination": "/meta-stripper/index.html"
     },
     {
+      "source": "/share-safe",
+      "destination": "/share-safe/index.html"
+    },
+    {
+      "source": "/share-safe/",
+      "destination": "/share-safe/index.html"
+    },
+    {
       "source": "/redact",
       "destination": "/redact/index.html"
     },

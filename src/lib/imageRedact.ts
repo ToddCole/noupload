@@ -19,9 +19,9 @@ export interface DraftRect {
 }
 
 const MIN_RECT_SIZE = 0.01;
-const BLUR_RADIUS_PX = 72;
+const BLUR_RADIUS_PX = 96;
 const BLUR_DOWNSAMPLE_RATIO = 0.025;
-const BLUR_VEIL_ALPHA = 0.18;
+const BLUR_VEIL_ALPHA = 0.28;
 
 export function normalizeRedactionRect(draft: DraftRect, mode: RedactionMode, id: string): RedactionRect | null {
   const x = clamp01(Math.min(draft.startX, draft.currentX));

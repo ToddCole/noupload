@@ -35,6 +35,18 @@ describe('app routes', () => {
     );
   });
 
+  it('renders Share-Safe at /share-safe', () => {
+    window.history.replaceState({}, '', '/share-safe');
+    render(<App />);
+
+    expect(screen.getByRole('heading', { name: 'Prepare an image before sharing' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Clean and verify/i })).toBeDisabled();
+    expect(document.title).toBe('Share-Safe Image Cleaner - Strip, Check, and Verify | NoUpload');
+    expect(document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href).toBe(
+      'https://noupload.services/share-safe',
+    );
+  });
+
   it('renders Image Meta Stripper with a trailing slash', () => {
     window.history.replaceState({}, '', '/meta-stripper/');
     render(<App />);

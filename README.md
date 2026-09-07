@@ -6,6 +6,7 @@ Image processing happens on-device via browser APIs and `<canvas>`. Your images 
 
 ## Features
 
+- **Share-Safe Image Cleaner** — inspect an image, create a cleaned copy, and inspect the exported blob again before sharing
 - **Image Meta Stripper** — inspect common image metadata, show the detected fields, and download a cleaned copy
 - **Image Redactor** — draw areas over sensitive content using black, blur, or pixelate modes, then export a flattened JPEG
 - **Image Compressor** — batch resize and compress JPEG, PNG, and WebP files locally
@@ -17,11 +18,17 @@ Image processing happens on-device via browser APIs and `<canvas>`. Your images 
 ## Routes
 
 - `/` — suite home
+- `/share-safe` — inspect, clean, and verify an image before sharing
 - `/meta-stripper` — image metadata inspection and cleaning
 - `/redact` — manual image redaction
 - `/compress` — image resizing and compression
 
 The old `/privacy-check` path remains as an alias for `/meta-stripper`.
+
+Share-Safe verification checks the exported file for remaining sensitive categories such as location, device, dates,
+author, software, and embedded preview data. Some structural fields can be recreated by a browser encoder, including
+dimensions, format, alpha, and colour profile information; those are reported separately and are not treated as
+personal metadata findings.
 
 ## Privacy and analytics
 
@@ -45,7 +52,7 @@ npm install
 npm run dev
 ```
 
-Open the printed local URL and choose a tool. All three tools process files locally in the browser.
+Open the printed local URL and choose a tool. All four workflows process files locally in the browser.
 
 ## Scripts
 

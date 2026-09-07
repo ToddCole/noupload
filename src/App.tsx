@@ -2,6 +2,7 @@ import type React from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Archive,
+  BadgeCheck,
   CheckCircle2,
   Download,
   FilePenLine,
@@ -45,11 +46,13 @@ import {
   isPrivacyImageFile,
   PrivacyReport,
   PrivacyStatus,
+  CleanVerification,
+  verifyCleanImage,
 } from './lib/privacyCheck';
 import { applySeo, SEO_BY_ROUTE } from './lib/seo';
 import { trackImageExport } from './lib/analytics';
 
-type RoutePath = '/' | '/meta-stripper' | '/redact' | '/compress';
+type RoutePath = '/' | '/share-safe' | '/meta-stripper' | '/redact' | '/compress';
 
 interface RouteLinkProps {
   href: RoutePath | string;
@@ -120,7 +123,7 @@ export function App() {
   }, []);
 
   const RouteLink = ({ href, className, children }: RouteLinkProps) => {
-    const isInternal = href === '/' || href === '/meta-stripper' || href === '/redact' || href === '/compress';
+    const isInternal = href === '/' || href === '/share-safe' || href === '/meta-stripper' || href === '/redact' || href === '/compress';
     return (
       <a
         className={className}
@@ -146,6 +149,9 @@ export function App() {
             <img src="/logo.png" alt="NoUpload" />
           </RouteLink>
           <nav className="nav-actions">
+            <RouteLink className={`nav-link ${route === '/share-safe' ? 'is-active' : ''}`} href="/share-safe">
+              Share-Safe
+            </RouteLink>
             <RouteLink className={`nav-link ${route === '/meta-stripper' ? 'is-active' : ''}`} href="/meta-stripper">
               Image Meta Stripper
             </RouteLink>
@@ -161,6 +167,7 @@ export function App() {
 
       <main id="top">
         {route === '/' ? <HubPage RouteLink={RouteLink} /> : null}
+        {route === '/share-safe' ? <ShareSafePage RouteLink={RouteLink} /> : null}
         {route === '/meta-stripper' ? <ImageMetaStripperPage RouteLink={RouteLink} /> : null}
         {route === '/redact' ? <ImageRedactorPage RouteLink={RouteLink} /> : null}
         {route === '/compress' ? <ImageCompressorPage /> : null}
@@ -192,6 +199,10 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
               Check and prepare sensitive images in your browser. <b>Your files never leave your device.</b>
             </p>
             <div className="hero-ctas">
+              <RouteLink className="btn btn-primary" href="/share-safe">
+                <BadgeCheck size={16} />
+                Open Share-Safe
+              </RouteLink>
               <RouteLink className="btn btn-primary" href="/meta-stripper">
                 <ShieldCheck size={16} />
                 Open Meta Stripper
@@ -294,6 +305,16 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
             <h2>Choose a tool</h2>
           </div>
           <div className="tool-cards">
+            <RouteLink className="tool-card primary-tool share-safe-card" href="/share-safe">
+              <span className="tool-icon">
+                <BadgeCheck size={28} />
+              </span>
+              <div>
+                <span className="tool-kicker">Recommended first step</span>
+                <h3>Share-Safe Image Cleaner</h3>
+                <p>Strip hidden details, prepare an image, and verify the exported copy before sharing.</p>
+              </div>
+            </RouteLink>
             <RouteLink className="tool-card primary-tool" href="/meta-stripper">
               <span className="tool-icon">
                 <ShieldCheck size={28} />
@@ -328,6 +349,161 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
         </div>
       </section>
 
+      <TrustSections />
+    </>
+  );
+}
+
+function ShareSafePage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps> }) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [report, setReport] = useState<PrivacyReport | null>(null);
+  const [verification, setVerification] = useState<CleanVerification | null>(null);
+  const [isWorking, setIsWorking] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const addFile = useCallback(async (fileList: FileList | File[]) => {
+    const nextFile = Array.from(fileList).find(isPrivacyImageFile);
+    if (!nextFile) {
+      setError('Please choose an image file.');
+      return;
+    }
+
+    setPreviewUrl((current) => {
+      if (current) URL.revokeObjectURL(current);
+      return URL.createObjectURL(nextFile);
+    });
+    setFile(nextFile);
+    setVerification(null);
+    setError(null);
+    setIsWorking(true);
+    try {
+      setReport(await inspectPrivacy(nextFile));
+    } catch (nextError) {
+      setReport(null);
+      setError(nextError instanceof Error ? nextError.message : 'This image could not be inspected.');
+    } finally {
+      setIsWorking(false);
+    }
+  }, []);
+
+  const cleanAndVerify = async () => {
+    if (!file) return;
+    setIsWorking(true);
+    setError(null);
+    setVerification(null);
+    try {
+      const cleaned = await cleanPrivacyImage(file, 1);
+      const result = await verifyCleanImage(cleaned.blob);
+      downloadBlob(cleaned.blob, cleaned.filename);
+      trackImageExport('meta_stripper');
+      setVerification(result);
+    } catch (nextError) {
+      setError(nextError instanceof Error ? nextError.message : 'This image could not be prepared in this browser.');
+    } finally {
+      setIsWorking(false);
+    }
+  };
+
+  const clear = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setFile(null);
+    setPreviewUrl(null);
+    setReport(null);
+    setVerification(null);
+    setError(null);
+  };
+
+  return (
+    <>
+      <section className="tool-hero">
+        <div className="wrap tool-hero-inner">
+          <div>
+            <div className="hero-badges">
+              <span className="hero-badge"><BadgeCheck size={15} /> Share-safe workflow</span>
+              <span className="hero-badge"><Laptop size={15} /> Local processing</span>
+            </div>
+            <h1>Prepare an image before sharing</h1>
+            <p className="hero-sub">Inspect hidden metadata, create a clean copy, and verify the exported file in this browser. <b>Your original stays on your device.</b></p>
+          </div>
+          <RouteLink className="btn btn-ghost" href="/">Suite hub</RouteLink>
+        </div>
+      </section>
+
+      <section className="band band-tray">
+        <div className="wrap">
+          <div className="share-safe-layout">
+            <aside className="privacy-summary share-safe-summary" aria-label="Share-Safe workflow">
+              <div className="panel-heading"><BadgeCheck size={16} /><h2>Share-Safe</h2></div>
+              <ol className="workflow-steps">
+                <li className={file ? 'is-done' : 'is-active'}><span>1</span> Inspect</li>
+                <li className={verification ? 'is-done' : file ? 'is-active' : ''}><span>2</span> Clean</li>
+                <li className={verification ? 'is-active' : ''}><span>3</span> Verify</li>
+              </ol>
+              <p className="trust-note">No filenames, image data, metadata values, or file details are sent to analytics.</p>
+              <button className="run-button" type="button" onClick={cleanAndVerify} disabled={!file || !report?.canClean || isWorking}>
+                {isWorking ? <Loader2 className="spin" size={18} /> : <BadgeCheck size={18} />}
+                Clean and verify
+              </button>
+              <button className="btn btn-ghost full-width-btn" type="button" onClick={clear} disabled={!file}><RotateCcw size={16} /> Clear</button>
+            </aside>
+
+            <section className="share-safe-workspace">
+              <div
+                className={`share-safe-upload ${isDragging ? 'is-dragging' : ''}`}
+                onDragOver={(event) => {
+                  event.preventDefault();
+                  setIsDragging(true);
+                }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  setIsDragging(false);
+                  void addFile(event.dataTransfer.files);
+                }}
+              >
+                <input ref={inputRef} type="file" accept="image/*,.heic,.heif,.avif" onChange={(event) => {
+                  if (event.target.files) {
+                    void addFile(event.target.files);
+                    event.target.value = '';
+                  }
+                }} />
+                {previewUrl ? <img src={previewUrl} alt="Selected image" /> : <Images size={42} />}
+                <div>
+                  <h3>{file ? file.name : 'Choose an image to prepare'}</h3>
+                  <p>{file ? 'The original file remains available only in this browser tab.' : 'JPEG, PNG, WebP, GIF, HEIC, and AVIF where browser support allows.'}</p>
+                </div>
+                <button className="btn btn-primary" type="button" onClick={() => inputRef.current?.click()}><Upload size={16} /> {file ? 'Replace image' : 'Add image'}</button>
+              </div>
+
+              {report ? (
+                <div className="share-safe-report">
+                  <div className="share-safe-report-head"><div><span className="tool-kicker">Step 1</span><h2>Inspection result</h2></div><StatusPill status={report.status} busy={isWorking} /></div>
+                  <p>{report.message}</p>
+                  <div className="share-safe-checks">
+                    <div><strong>{report.metadata.length}</strong><span>metadata fields found</span></div>
+                    <div><strong>{report.findings.length}</strong><span>privacy findings</span></div>
+                    <div><strong>{report.canClean ? 'Yes' : 'No'}</strong><span>browser cleaning</span></div>
+                  </div>
+                  {report.findings.length > 0 ? <ul className="finding-list">{report.findings.map((finding) => <li className={`risk-${finding.risk}`} key={finding.key}>{finding.label}</li>)}</ul> : null}
+                  <div className="share-safe-next"><span>Need to cover something visible in the image?</span><RouteLink className="btn btn-ghost" href="/redact"><ScanLine size={16} /> Open Redactor</RouteLink></div>
+                </div>
+              ) : <div className="empty-list privacy-empty">Choose an image to begin the local inspection.</div>}
+
+              {verification ? (
+                <div className={`verification-panel ${verification.passed ? 'is-passed' : 'is-warning'}`}>
+                  <div className="share-safe-report-head"><div><span className="tool-kicker">Step 3</span><h2>{verification.passed ? 'Ready to share' : 'Review the cleaned copy'}</h2></div>{verification.passed ? <CheckCircle2 size={24} /> : <X size={24} />}</div>
+                  <p>{verification.passed ? 'The exported image was inspected after cleaning. No common sensitive metadata categories remain.' : 'The exported image still needs review before sharing.'}</p>
+                  <div className="verification-details"><span>Remaining sensitive findings <b>{verification.remainingFindings.length}</b></span><span>Remaining parsed fields <b>{verification.remainingMetadata}</b></span>{verification.sha256 ? <span>SHA-256 <code>{verification.sha256}</code></span> : null}</div>
+                </div>
+              ) : null}
+              {error ? <em className="privacy-error">{error}</em> : null}
+            </section>
+          </div>
+        </div>
+      </section>
       <TrustSections />
     </>
   );
@@ -1550,6 +1726,7 @@ function Footer({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps> 
           <img src="/logo.png" alt="NoUpload" />
         </RouteLink>
         <div className="foot-links">
+          <RouteLink href="/share-safe">Share-Safe Workflow</RouteLink>
           <RouteLink href="/meta-stripper">Image Meta Stripper</RouteLink>
           <RouteLink href="/redact">Image Redactor</RouteLink>
           <RouteLink href="/compress">Image Compressor</RouteLink>
@@ -1598,6 +1775,9 @@ function StatusPill({ status, busy }: { status: PrivacyStatus | undefined; busy:
 
 function normalizeRoute(pathname: string): RoutePath {
   const path = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
+  if (path === '/share-safe') {
+    return '/share-safe';
+  }
   if (path === '/meta-stripper' || path === '/privacy-check') {
     return '/meta-stripper';
   }

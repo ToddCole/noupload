@@ -27,6 +27,13 @@ export interface PrivacyReport {
   message: string;
 }
 
+export interface CleanVerification {
+  passed: boolean;
+  remainingFindings: PrivacyFinding[];
+  remainingMetadata: number;
+  sha256: string | null;
+}
+
 type ExifTags = Record<string, unknown>;
 
 export interface PrivacyMetadataEntry {
@@ -221,6 +228,29 @@ export async function cleanPrivacyImage(file: File, outputIndex: number): Promis
     blob: result.blob,
     filename: ensureCleanExtension(result.filename, outputFormat),
   };
+}
+
+export async function verifyCleanImage(blob: Blob): Promise<CleanVerification> {
+  const file = new File([blob], 'noupload-clean-output', { type: blob.type });
+  const report = await inspectPrivacy(file);
+  const remainingFindings = report.findings.filter((finding) => !['formatMismatch', 'unknownType'].includes(finding.key));
+  const sha256 = await hashBlob(blob);
+
+  return {
+    passed: report.canInspect && remainingFindings.length === 0,
+    remainingFindings,
+    remainingMetadata: report.metadata.length,
+    sha256,
+  };
+}
+
+async function hashBlob(blob: Blob): Promise<string | null> {
+  if (!globalThis.crypto?.subtle) {
+    return null;
+  }
+
+  const digest = await globalThis.crypto.subtle.digest('SHA-256', await blob.arrayBuffer());
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
 function unsupportedReport(canInspect: boolean): PrivacyReport {
