@@ -1,18 +1,42 @@
 # NoUpload
 
-Big photos in, tiny files out. A local, in-browser tool for squishing oversized images — Shutterstock exports, camera dumps, whatever — down to web-friendly sizes.
+Private image tools that run entirely in your browser. NoUpload helps people inspect and strip image metadata, redact sensitive areas, and compress images without uploading the original files.
 
-Image processing happens on-device via `<canvas>`. Your images are not uploaded, stored, or processed on a server.
+Image processing happens on-device via browser APIs and `<canvas>`. Your images are not uploaded, stored, or processed on a NoUpload server.
 
 ## Features
 
-- Drag-and-drop or file-picker batch upload
-- Output format: Auto, WebP, JPEG, or PNG
-- Max edge resizing (800 / 1200 / 1600 / 2400px, or original)
-- Quality slider, or aim for a target file size (KB) and let it iterate down to fit
-- Strip metadata
-- Per-image rename, preview (original vs. optimized), and download
-- Download everything at once as a zip
+- **Image Meta Stripper** — inspect common image metadata, show the detected fields, and download a cleaned copy
+- **Image Redactor** — draw areas over sensitive content using black, blur, or pixelate modes, then export a flattened JPEG
+- **Image Compressor** — batch resize and compress JPEG, PNG, and WebP files locally
+- Drag-and-drop or file-picker workflows
+- Metadata stripping during supported exports
+- Per-image preview and download
+- Download compressor results individually or as a zip
+
+## Routes
+
+- `/` — suite home
+- `/meta-stripper` — image metadata inspection and cleaning
+- `/redact` — manual image redaction
+- `/compress` — image resizing and compression
+
+The old `/privacy-check` path remains as an alias for `/meta-stripper`.
+
+## Privacy and analytics
+
+NoUpload does not send image blobs, filenames, metadata values, file sizes, dimensions, or file counts to analytics. File inspection and processing do not make external requests.
+
+Google Analytics records normal page views and one aggregate custom event after a successful download:
+
+```text
+image_export
+tool: meta_stripper | redactor | compressor
+```
+
+The event measures completed tool usage only. Selecting a file, inspecting metadata, drawing a redaction area, or starting a failed operation does not send a custom usage event.
+
+GA4 account configuration is manual. After deployment, confirm `image_export` in Realtime, register the `tool` event parameter as a custom dimension if tool-level reporting is needed, and mark `image_export` as a key event when appropriate. Use UTM-tagged links for advertising campaign attribution.
 
 ## Getting started
 
@@ -21,7 +45,7 @@ npm install
 npm run dev
 ```
 
-Open the printed local URL, drop in some images, and hit **Squish**.
+Open the printed local URL and choose a tool. All three tools process files locally in the browser.
 
 ## Scripts
 
@@ -29,3 +53,11 @@ Open the printed local URL, drop in some images, and hit **Squish**.
 - `npm run build` — type-check and build for production
 - `npm run preview` — preview the production build
 - `npm run test` — run the test suite
+
+Before shipping, run:
+
+```bash
+npm test
+npm run build
+git diff --check
+```
