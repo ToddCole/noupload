@@ -3,6 +3,15 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react],
+  build: {
+    rollupOptions: {
+      input: {
+        main: new URL('./index.html', import.meta.url).pathname,
+        metaStripper: new URL('./meta-stripper/index.html', import.meta.url).pathname,
+        compress: new URL('./compress/index.html', import.meta.url).pathname,
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
   },

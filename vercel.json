@@ -1,16 +1,32 @@
 {
+  "redirects": [
+    {
+      "source": "/privacy-check",
+      "destination": "/meta-stripper",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-check/",
+      "destination": "/meta-stripper",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/meta-stripper",
-      "destination": "/index.html"
+      "destination": "/meta-stripper/index.html"
     },
     {
-      "source": "/privacy-check",
-      "destination": "/index.html"
+      "source": "/meta-stripper/",
+      "destination": "/meta-stripper/index.html"
     },
     {
       "source": "/compress",
-      "destination": "/index.html"
+      "destination": "/compress/index.html"
+    },
+    {
+      "source": "/compress/",
+      "destination": "/compress/index.html"
     }
   ],
   "headers": [
@@ -19,7 +35,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' https://www.googletagmanager.com 'sha256-CZd4xi/YSngbUzKLIil7y3gtaUb9kvFjLI65Zb/Ltyk=' 'sha256-cV9MHjJplSxYTu1CqKG2D6K6Juu9FTZ20S7YlnJJnIQ=' 'sha256-GhP+sTfTD+SzyvJ02Pg1GuS9glAy3u0dPZm3Lsd3uGY='; connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' https://www.googletagmanager.com 'sha256-eVrtAMesdUQDp+YlfnERWAsSn/81AhWcPEWQOrYxZpo=' 'sha256-9vZI9LDqrN3nsqjFANusaYCYdjVUPQNV/Rdqouc9ytc=' 'sha256-171/FcXxPOsUNnlcdxWmQW9VIksnCeFCgfMBNd99Mks=' 'sha256-cV9MHjJplSxYTu1CqKG2D6K6Juu9FTZ20S7YlnJJnIQ=' 'sha256-GhP+sTfTD+SzyvJ02Pg1GuS9glAy3u0dPZm3Lsd3uGY='; connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests"
         },
         {
           "key": "X-Content-Type-Options",

@@ -26,6 +26,20 @@ describe('app routes', () => {
 
     expect(screen.getByRole('heading', { name: 'Image Meta Stripper' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Check images/i })).toBeDisabled();
+    expect(document.title).toBe('Image Meta Stripper - Strip Image Metadata Locally | NoUpload');
+    expect(document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href).toBe(
+      'https://noupload.services/meta-stripper',
+    );
+  });
+
+  it('renders Image Meta Stripper with a trailing slash', () => {
+    window.history.replaceState({}, '', '/meta-stripper/');
+    render(<App />);
+
+    expect(screen.getByRole('heading', { name: 'Image Meta Stripper' })).toBeInTheDocument();
+    expect(document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href).toBe(
+      'https://noupload.services/meta-stripper',
+    );
   });
 
   it('keeps the old privacy-check route working as an alias', () => {
@@ -41,5 +55,9 @@ describe('app routes', () => {
 
     expect(screen.getByRole('heading', { name: 'Image Compressor' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Develop/i })).toBeDisabled();
+    expect(document.title).toBe('Image Compressor - Compress Images Locally | NoUpload');
+    expect(document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href).toBe(
+      'https://noupload.services/compress',
+    );
   });
 });

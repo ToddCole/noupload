@@ -36,6 +36,7 @@ import {
   PrivacyReport,
   PrivacyStatus,
 } from './lib/privacyCheck';
+import { applySeo, SEO_BY_ROUTE } from './lib/seo';
 
 type RoutePath = '/' | '/meta-stripper' | '/compress';
 
@@ -88,6 +89,10 @@ export function App() {
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
+
+  useEffect(() => {
+    applySeo(SEO_BY_ROUTE[route]);
+  }, [route]);
 
   const navigate = useCallback((path: RoutePath) => {
     if (path === normalizeRoute(window.location.pathname)) {
@@ -1224,10 +1229,11 @@ function StatusPill({ status, busy }: { status: PrivacyStatus | undefined; busy:
 }
 
 function normalizeRoute(pathname: string): RoutePath {
-  if (pathname === '/meta-stripper' || pathname === '/privacy-check') {
+  const path = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
+  if (path === '/meta-stripper' || path === '/privacy-check') {
     return '/meta-stripper';
   }
-  if (pathname === '/compress') {
+  if (path === '/compress') {
     return '/compress';
   }
   return '/';
