@@ -1,4 +1,14 @@
 {
+  "rewrites": [
+    {
+      "source": "/privacy-check",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/compress",
+      "destination": "/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
