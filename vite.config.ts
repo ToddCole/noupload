@@ -8,6 +8,7 @@ export default defineConfig({
       input: {
         main: new URL('./index.html', import.meta.url).pathname,
         metaStripper: new URL('./meta-stripper/index.html', import.meta.url).pathname,
+        redact: new URL('./redact/index.html', import.meta.url).pathname,
         compress: new URL('./compress/index.html', import.meta.url).pathname,
       },
     },

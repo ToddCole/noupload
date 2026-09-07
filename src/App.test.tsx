@@ -18,6 +18,9 @@ describe('app routes', () => {
     expect(screen.getByRole('heading', { name: 'NoUpload private file tools' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Open Meta Stripper/i })).toHaveAttribute('href', '/meta-stripper');
     expect(screen.getByRole('link', { name: /Open Image Compressor/i })).toHaveAttribute('href', '/compress');
+    expect(screen.getAllByRole('link', { name: /Image Redactor/i }).some((link) => link.getAttribute('href') === '/redact')).toBe(
+      true,
+    );
   });
 
   it('renders Image Meta Stripper at /meta-stripper', () => {
@@ -58,6 +61,18 @@ describe('app routes', () => {
     expect(document.title).toBe('Image Compressor - Compress Images Locally | NoUpload');
     expect(document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href).toBe(
       'https://noupload.services/compress',
+    );
+  });
+
+  it('renders Image Redactor at /redact', () => {
+    window.history.replaceState({}, '', '/redact');
+    render(<App />);
+
+    expect(screen.getByRole('heading', { name: 'Image Redactor' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Export redacted/i })).toBeDisabled();
+    expect(document.title).toBe('Image Redactor - Redact Images Locally | NoUpload');
+    expect(document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href).toBe(
+      'https://noupload.services/redact',
     );
   });
 });

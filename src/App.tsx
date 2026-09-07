@@ -11,9 +11,11 @@ import {
   Laptop,
   Loader2,
   Lock,
+  ScanLine,
   RotateCcw,
   ShieldCheck,
   SlidersHorizontal,
+  Square,
   Upload,
   X,
 } from 'lucide-react';
@@ -30,6 +32,14 @@ import {
   zipResults,
 } from './lib/imageShrink';
 import {
+  DraftRect,
+  normalizeRedactionRect,
+  redactImage,
+  RedactionMode,
+  RedactionRect,
+  rectToPercentStyle,
+} from './lib/imageRedact';
+import {
   cleanPrivacyImage,
   inspectPrivacy,
   isPrivacyImageFile,
@@ -38,7 +48,7 @@ import {
 } from './lib/privacyCheck';
 import { applySeo, SEO_BY_ROUTE } from './lib/seo';
 
-type RoutePath = '/' | '/meta-stripper' | '/compress';
+type RoutePath = '/' | '/meta-stripper' | '/redact' | '/compress';
 
 interface RouteLinkProps {
   href: RoutePath | string;
@@ -57,6 +67,11 @@ const DEFAULT_SETTINGS: ShrinkSettings = {
 
 const MAX_SIZE_OPTIONS: ShrinkSettings['maxSize'][] = ['original', 2400, 1600, 1200, 800];
 const FORMAT_OPTIONS: OutputFormat[] = ['auto', 'webp', 'jpeg', 'png'];
+const REDACTION_MODES: Array<{ mode: RedactionMode; label: string }> = [
+  { mode: 'black', label: 'Black box' },
+  { mode: 'blur', label: 'Blur' },
+  { mode: 'pixelate', label: 'Pixelate' },
+];
 
 const FAQ_ITEMS = [
   {
@@ -104,7 +119,7 @@ export function App() {
   }, []);
 
   const RouteLink = ({ href, className, children }: RouteLinkProps) => {
-    const isInternal = href === '/' || href === '/meta-stripper' || href === '/compress';
+    const isInternal = href === '/' || href === '/meta-stripper' || href === '/redact' || href === '/compress';
     return (
       <a
         className={className}
@@ -133,6 +148,9 @@ export function App() {
             <RouteLink className={`nav-link ${route === '/meta-stripper' ? 'is-active' : ''}`} href="/meta-stripper">
               Image Meta Stripper
             </RouteLink>
+            <RouteLink className={`nav-link ${route === '/redact' ? 'is-active' : ''}`} href="/redact">
+              Image Redactor
+            </RouteLink>
             <RouteLink className={`nav-link ${route === '/compress' ? 'is-active' : ''}`} href="/compress">
               Image Compressor
             </RouteLink>
@@ -146,6 +164,7 @@ export function App() {
       <main id="top">
         {route === '/' ? <HubPage RouteLink={RouteLink} /> : null}
         {route === '/meta-stripper' ? <ImageMetaStripperPage RouteLink={RouteLink} /> : null}
+        {route === '/redact' ? <ImageRedactorPage RouteLink={RouteLink} /> : null}
         {route === '/compress' ? <ImageCompressorPage /> : null}
       </main>
 
@@ -224,6 +243,13 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
               <div>
                 <h3>Image Compressor</h3>
                 <p>Resize and compress JPEG, PNG, and WebP images locally.</p>
+              </div>
+            </RouteLink>
+            <RouteLink className="tool-card" href="/redact">
+              <ScanLine size={28} />
+              <div>
+                <h3>Image Redactor</h3>
+                <p>Cover sensitive areas manually, then export a flattened image.</p>
               </div>
             </RouteLink>
           </div>
@@ -487,6 +513,270 @@ function ImageMetaStripperPage({ RouteLink }: { RouteLink: React.ComponentType<R
                     </div>
                   </article>
                 ))
+              )}
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <TrustSections />
+    </>
+  );
+}
+
+function ImageRedactorPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps> }) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [rects, setRects] = useState<RedactionRect[]>([]);
+  const [draft, setDraft] = useState<DraftRect | null>(null);
+  const [mode, setMode] = useState<RedactionMode>('black');
+  const [isDragging, setIsDragging] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const addFile = useCallback((fileList: FileList | File[]) => {
+    const nextFile = Array.from(fileList).find(isImageFile);
+    if (!nextFile) {
+      return;
+    }
+
+    setPreviewUrl((current) => {
+      if (current) {
+        URL.revokeObjectURL(current);
+      }
+      return URL.createObjectURL(nextFile);
+    });
+    setFile(nextFile);
+    setRects([]);
+    setDraft(null);
+    setError(null);
+  }, []);
+
+  const clearImage = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setFile(null);
+    setPreviewUrl(null);
+    setRects([]);
+    setDraft(null);
+    setError(null);
+  };
+
+  const pointFromEvent = (event: React.PointerEvent): { x: number; y: number } | null => {
+    const bounds = stageRef.current?.getBoundingClientRect();
+    if (!bounds || bounds.width === 0 || bounds.height === 0) {
+      return null;
+    }
+
+    return {
+      x: (event.clientX - bounds.left) / bounds.width,
+      y: (event.clientY - bounds.top) / bounds.height,
+    };
+  };
+
+  const exportImage = async () => {
+    if (!file || rects.length === 0) {
+      return;
+    }
+
+    setIsExporting(true);
+    setError(null);
+    try {
+      const result = await redactImage(file, rects);
+      downloadBlob(result.blob, result.filename);
+    } catch (nextError) {
+      setError(nextError instanceof Error ? nextError.message : 'This image could not be redacted in this browser.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  return (
+    <>
+      <section className="tool-hero">
+        <div className="wrap tool-hero-inner">
+          <div>
+            <div className="hero-badges">
+              <span className="hero-badge">
+                <Square size={15} />
+                Manual
+              </span>
+              <span className="hero-badge">
+                <Laptop size={15} />
+                Local processing
+              </span>
+            </div>
+            <h1>Image Redactor</h1>
+            <p className="hero-sub">
+              Cover names, addresses, faces, plates, tokens, and other sensitive areas before sharing.
+              <b> Your files never leave your device.</b>
+            </p>
+          </div>
+          <RouteLink className="btn btn-ghost" href="/">
+            Suite hub
+          </RouteLink>
+        </div>
+      </section>
+
+      <section className="band band-tray">
+        <div className="wrap">
+          <div className="redactor-grid">
+            <aside className="redactor-panel" aria-label="Image Redactor controls">
+              <div className="panel-heading">
+                <ScanLine size={16} />
+                <h2>Redact</h2>
+              </div>
+
+              <div className="mode-group" role="group" aria-label="Redaction mode">
+                {REDACTION_MODES.map((item) => (
+                  <button
+                    className={`mode-button ${mode === item.mode ? 'is-active' : ''}`}
+                    key={item.mode}
+                    type="button"
+                    onClick={() => setMode(item.mode)}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="redactor-count">
+                <span>{rects.length}</span>
+                <p>Areas marked</p>
+              </div>
+
+              <button
+                className="run-button"
+                type="button"
+                onClick={exportImage}
+                disabled={!file || rects.length === 0 || isExporting}
+              >
+                {isExporting ? <Loader2 className="spin" size={18} /> : <Download size={18} />}
+                Export redacted
+              </button>
+
+              <button
+                className="btn btn-ghost full-width-btn"
+                type="button"
+                onClick={() => setRects((current) => current.slice(0, -1))}
+                disabled={rects.length === 0 || isExporting}
+              >
+                <RotateCcw size={16} />
+                Undo area
+              </button>
+
+              <button className="btn btn-ghost full-width-btn" type="button" onClick={clearImage} disabled={!file}>
+                <X size={16} />
+                Clear image
+              </button>
+
+              <p className="trust-note">
+                Export creates a flattened JPEG and strips metadata after redaction. NoUpload does not send image data or
+                redaction actions to analytics.
+              </p>
+              {error ? <em className="privacy-error">{error}</em> : null}
+            </aside>
+
+            <section
+              className={`redactor-stage-shell ${isDragging ? 'is-dragging' : ''}`}
+              onDragOver={(event) => {
+                event.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={(event) => {
+                event.preventDefault();
+                setIsDragging(false);
+                addFile(event.dataTransfer.files);
+              }}
+            >
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                onChange={(event) => {
+                  if (event.target.files) {
+                    addFile(event.target.files);
+                    event.target.value = '';
+                  }
+                }}
+              />
+              {previewUrl ? (
+                <div
+                  className="redactor-stage"
+                  ref={stageRef}
+                  onPointerDown={(event) => {
+                    const point = pointFromEvent(event);
+                    if (!point) {
+                      return;
+                    }
+                    event.currentTarget.setPointerCapture(event.pointerId);
+                    setDraft({ startX: point.x, startY: point.y, currentX: point.x, currentY: point.y });
+                  }}
+                  onPointerMove={(event) => {
+                    if (!draft) {
+                      return;
+                    }
+                    const point = pointFromEvent(event);
+                    if (!point) {
+                      return;
+                    }
+                    setDraft((current) => (current ? { ...current, currentX: point.x, currentY: point.y } : current));
+                  }}
+                  onPointerUp={(event) => {
+                    const point = pointFromEvent(event);
+                    if (point && draft) {
+                      const rect = normalizeRedactionRect(
+                        { ...draft, currentX: point.x, currentY: point.y },
+                        mode,
+                        crypto.randomUUID(),
+                      );
+                      if (rect) {
+                        setRects((current) => [...current, rect]);
+                      }
+                    }
+                    setDraft(null);
+                    event.currentTarget.releasePointerCapture(event.pointerId);
+                  }}
+                  onPointerCancel={() => setDraft(null)}
+                >
+                  <img src={previewUrl} alt="" draggable={false} />
+                  {rects.map((rect) => (
+                    <div className={`redaction-box mode-${rect.mode}`} key={rect.id} style={rectToPercentStyle(rect)} />
+                  ))}
+                  {draft ? (
+                    <div
+                      className={`redaction-box is-draft mode-${mode}`}
+                      style={
+                        rectToPercentStyle(
+                          normalizeRedactionRect(draft, mode, 'draft') ?? {
+                            id: 'draft',
+                            mode,
+                            x: Math.min(draft.startX, draft.currentX),
+                            y: Math.min(draft.startY, draft.currentY),
+                            width: Math.abs(draft.currentX - draft.startX),
+                            height: Math.abs(draft.currentY - draft.startY),
+                          },
+                        )
+                      }
+                    />
+                  ) : null}
+                </div>
+              ) : (
+                <div className="redactor-empty">
+                  <Images size={42} />
+                  <div>
+                    <h3>Drop one image to redact</h3>
+                    <p>Draw boxes over sensitive areas, then export a flattened copy.</p>
+                  </div>
+                  <button className="btn btn-primary" type="button" onClick={() => inputRef.current?.click()}>
+                    <Upload size={16} />
+                    Add image
+                  </button>
+                </div>
               )}
             </section>
           </div>
@@ -1184,6 +1474,7 @@ function Footer({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps> 
         </RouteLink>
         <div className="foot-links">
           <RouteLink href="/meta-stripper">Image Meta Stripper</RouteLink>
+          <RouteLink href="/redact">Image Redactor</RouteLink>
           <RouteLink href="/compress">Image Compressor</RouteLink>
           <a href="#legal">Privacy &amp; terms</a>
           <a href="https://github.com/ToddCole/noupload" target="_blank" rel="noreferrer">
@@ -1232,6 +1523,9 @@ function normalizeRoute(pathname: string): RoutePath {
   const path = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
   if (path === '/meta-stripper' || path === '/privacy-check') {
     return '/meta-stripper';
+  }
+  if (path === '/redact') {
+    return '/redact';
   }
   if (path === '/compress') {
     return '/compress';

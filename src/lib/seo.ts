@@ -8,8 +8,9 @@ const SITE_URL = 'https://noupload.services';
 
 export const SEO_BY_ROUTE = {
   '/': {
-    title: 'NoUpload - Image Meta Stripper and Image Compressor',
-    description: 'Show and strip image metadata, then compress images entirely in your browser. Your files never leave your device.',
+    title: 'NoUpload - Image Meta Stripper, Redactor, and Compressor',
+    description:
+      'Strip image metadata, redact sensitive areas, and compress images entirely in your browser. Your files never leave your device.',
     path: '/',
   },
   '/meta-stripper': {
@@ -17,6 +18,12 @@ export const SEO_BY_ROUTE = {
     description:
       'Show and strip image metadata including EXIF, GPS, ICC, XMP, author fields, camera details, and dates. Images are processed locally in your browser.',
     path: '/meta-stripper',
+  },
+  '/redact': {
+    title: 'Image Redactor - Redact Images Locally | NoUpload',
+    description:
+      'Manually cover faces, names, addresses, plates, tokens, and other sensitive image areas locally in your browser before sharing.',
+    path: '/redact',
   },
   '/compress': {
     title: 'Image Compressor - Compress Images Locally | NoUpload',
