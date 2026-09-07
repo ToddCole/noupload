@@ -47,6 +47,7 @@ import {
   PrivacyStatus,
 } from './lib/privacyCheck';
 import { applySeo, SEO_BY_ROUTE } from './lib/seo';
+import { trackImageExport } from './lib/analytics';
 
 type RoutePath = '/' | '/meta-stripper' | '/redact' | '/compress';
 
@@ -76,7 +77,7 @@ const REDACTION_MODES: Array<{ mode: RedactionMode; label: string }> = [
 const FAQ_ITEMS = [
   {
     q: 'Is this really private?',
-    a: "Yes. File processing happens using your browser's own tools. Google Analytics records page views for the site, but NoUpload does not send image data, filenames, metadata values, file sizes, or tool actions to analytics.",
+    a: "Yes. File processing happens using your browser's own tools. Google Analytics records page views and anonymous aggregate export counts, but NoUpload does not send image data, filenames, metadata values, file sizes, or other file details to analytics.",
   },
   {
     q: 'What formats does Image Compressor support?',
@@ -208,7 +209,7 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
               <span>Runs in your browser</span>
               <span>No account</span>
               <span>No file uploads</span>
-              <span>Page-view analytics only</span>
+              <span>Anonymous usage counts</span>
             </div>
           </div>
 
@@ -406,6 +407,7 @@ function ImageMetaStripperPage({ RouteLink }: { RouteLink: React.ComponentType<R
     try {
       const clean = await cleanPrivacyImage(item.file, items.findIndex((entry) => entry.id === id) + 1);
       downloadBlob(clean.blob, clean.filename);
+      trackImageExport('meta_stripper');
       setItems((current) => current.map((entry) => (entry.id === id ? { ...entry, status: 'done' } : entry)));
     } catch (error) {
       setItems((current) =>
@@ -477,8 +479,8 @@ function ImageMetaStripperPage({ RouteLink }: { RouteLink: React.ComponentType<R
                 </div>
               </div>
               <p className="trust-note">
-                NoUpload does not send filenames, metadata values, file sizes, image blobs, or tool actions to Google
-                Analytics.
+                NoUpload does not send filenames, metadata values, file sizes, or image blobs to Google Analytics.
+                Anonymous export counts help us measure tool usage.
               </p>
               <button className="run-button" type="button" onClick={inspectAll} disabled={items.length === 0 || hasInspecting}>
                 {hasInspecting ? <Loader2 className="spin" size={18} /> : <FileSearch size={18} />}
@@ -658,6 +660,7 @@ function ImageRedactorPage({ RouteLink }: { RouteLink: React.ComponentType<Route
     try {
       const result = await redactImage(file, rects);
       downloadBlob(result.blob, result.filename);
+      trackImageExport('redactor');
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : 'This image could not be redacted in this browser.');
     } finally {
@@ -745,8 +748,8 @@ function ImageRedactorPage({ RouteLink }: { RouteLink: React.ComponentType<Route
               </button>
 
               <p className="trust-note">
-                Export creates a flattened JPEG and strips metadata after redaction. NoUpload does not send image data or
-                redaction actions to analytics.
+                Export creates a flattened JPEG and strips metadata after redaction. Analytics records only that an
+                export completed and which tool was used.
               </p>
               {error ? <em className="privacy-error">{error}</em> : null}
             </aside>
@@ -1070,6 +1073,7 @@ function ImageCompressorPage() {
     try {
       const blob = await zipResults(completedResults);
       downloadBlob(blob, 'shrunk-images.zip');
+      trackImageExport('compressor');
     } finally {
       setIsZipping(false);
     }
@@ -1367,6 +1371,7 @@ function ImageCompressorPage() {
                           onClick={(event) => {
                             event.stopPropagation();
                             downloadBlob(job.result!.blob, job.result!.filename);
+                            trackImageExport('compressor');
                           }}
                         >
                           <Download size={17} />
@@ -1489,14 +1494,14 @@ function TrustSections() {
               want sitting in a stranger's storage, the safer upload is the one that never happens.
             </p>
             <p>
-              File processing runs in your browser. Google Analytics remains on the site for page-view measurement,
-              but V1 does not send filenames, metadata values, file sizes, image blobs, or tool actions as custom
-              analytics events.
+              File processing runs in your browser. Google Analytics records page views and anonymous aggregate export
+              counts, but NoUpload does not send filenames, metadata values, file sizes, image blobs, or other file
+              details as analytics data.
             </p>
             <ul className="facts">
               <li>Your files never leave your device</li>
               <li>No account, sign-in, or email required</li>
-              <li>No analytics events include your images or filenames</li>
+              <li>Analytics events include only aggregate tool and export counts</li>
               <li>No server-side file processing path</li>
             </ul>
           </div>
@@ -1515,9 +1520,10 @@ function TrustSections() {
               your browser. Your files are not uploaded to NoUpload for processing.
             </p>
             <p>
-              <b>What this site collects:</b> standard page-view analytics via Google Analytics, which uses cookies
-              and may record approximate location, device/browser type, and pages visited. V1 does not add custom
-              analytics for file processing actions.
+              <b>What this site collects:</b> standard page-view analytics plus an anonymous aggregate
+              <code>image_export</code> event identifying which tool completed a download. Google Analytics may record
+              approximate location, device/browser type, and pages visited. NoUpload does not send filenames, image
+              data, metadata values, file sizes, dimensions, or file counts.
             </p>
             <p>
               <b>Terms:</b> NoUpload is provided free, as-is, with no warranty of any kind. Use it at your own risk.
