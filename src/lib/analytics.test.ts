@@ -4,6 +4,7 @@ import { trackImageExport } from './analytics';
 describe('image export analytics', () => {
   afterEach(() => {
     Reflect.deleteProperty(window, 'gtag');
+    Reflect.deleteProperty(window, 'dataLayer');
   });
 
   it('records only the approved event and tool value', () => {
@@ -17,7 +18,11 @@ describe('image export analytics', () => {
     expect(JSON.stringify(gtag.mock.calls)).not.toMatch(/filename|metadata|size|dimension|blob|count/i);
   });
 
-  it('does nothing when analytics is unavailable', () => {
-    expect(() => trackImageExport('compressor')).not.toThrow();
+  it('queues the event in the data layer when gtag is unavailable', () => {
+    window.dataLayer = [];
+
+    trackImageExport('compressor');
+
+    expect(window.dataLayer).toEqual([['event', 'image_export', { tool: 'compressor' }]]);
   });
 });

@@ -5,9 +5,16 @@ type Gtag = (command: 'event', eventName: 'image_export', parameters: { tool: Im
 declare global {
   interface Window {
     gtag?: Gtag;
+    dataLayer?: unknown[];
   }
 }
 
 export function trackImageExport(tool: ImageTool): void {
-  window.gtag?.('event', 'image_export', { tool });
+  if (window.gtag) {
+    window.gtag('event', 'image_export', { tool });
+    return;
+  }
+
+  const dataLayer = window.dataLayer ?? (window.dataLayer = []);
+  dataLayer.push(['event', 'image_export', { tool }]);
 }
