@@ -37,7 +37,7 @@ import {
   PrivacyStatus,
 } from './lib/privacyCheck';
 
-type RoutePath = '/' | '/privacy-check' | '/compress';
+type RoutePath = '/' | '/meta-stripper' | '/compress';
 
 interface RouteLinkProps {
   href: RoutePath | string;
@@ -63,12 +63,12 @@ const FAQ_ITEMS = [
     a: "Yes. File processing happens using your browser's own tools. Google Analytics records page views for the site, but NoUpload does not send image data, filenames, metadata values, file sizes, or tool actions to analytics.",
   },
   {
-    q: 'What formats does the compressor support?',
+    q: 'What formats does Image Compressor support?',
     a: 'JPEG, PNG, and WebP in. Output as Auto, WebP, JPEG, or PNG.',
   },
   {
-    q: 'What does Privacy Check inspect?',
-    a: 'Privacy Check looks for common metadata categories in image files: location, camera/device details, dates, author fields, software fields, embedded previews, and obvious format mismatches.',
+    q: 'What does Image Meta Stripper inspect?',
+    a: 'Image Meta Stripper looks for common metadata categories in image files: location, camera/device details, dates, author fields, software fields, embedded previews, and obvious format mismatches.',
   },
   {
     q: 'Is there a batch or file size limit?',
@@ -99,7 +99,7 @@ export function App() {
   }, []);
 
   const RouteLink = ({ href, className, children }: RouteLinkProps) => {
-    const isInternal = href === '/' || href === '/privacy-check' || href === '/compress';
+    const isInternal = href === '/' || href === '/meta-stripper' || href === '/compress';
     return (
       <a
         className={className}
@@ -125,11 +125,11 @@ export function App() {
             <img src="/logo.png" alt="NoUpload" />
           </RouteLink>
           <nav className="nav-actions">
-            <RouteLink className={`nav-link ${route === '/privacy-check' ? 'is-active' : ''}`} href="/privacy-check">
-              Privacy Check
+            <RouteLink className={`nav-link ${route === '/meta-stripper' ? 'is-active' : ''}`} href="/meta-stripper">
+              Image Meta Stripper
             </RouteLink>
             <RouteLink className={`nav-link ${route === '/compress' ? 'is-active' : ''}`} href="/compress">
-              Photo Compressor
+              Image Compressor
             </RouteLink>
             <a className="nav-link" href="https://github.com/ToddCole/noupload" target="_blank" rel="noreferrer">
               Source
@@ -140,8 +140,8 @@ export function App() {
 
       <main id="top">
         {route === '/' ? <HubPage RouteLink={RouteLink} /> : null}
-        {route === '/privacy-check' ? <PrivacyCheckPage RouteLink={RouteLink} /> : null}
-        {route === '/compress' ? <PhotoCompressorPage /> : null}
+        {route === '/meta-stripper' ? <ImageMetaStripperPage RouteLink={RouteLink} /> : null}
+        {route === '/compress' ? <ImageCompressorPage /> : null}
       </main>
 
       <Footer RouteLink={RouteLink} />
@@ -170,13 +170,13 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
               Check and prepare sensitive images in your browser. <b>Your files never leave your device.</b>
             </p>
             <div className="hero-ctas">
-              <RouteLink className="btn btn-primary" href="/privacy-check">
+              <RouteLink className="btn btn-primary" href="/meta-stripper">
                 <ShieldCheck size={16} />
-                Open Privacy Check
+                Open Meta Stripper
               </RouteLink>
               <RouteLink className="btn btn-ghost" href="/compress">
                 <ImageIcon size={16} />
-                Open Compressor
+                Open Image Compressor
               </RouteLink>
             </div>
             <p className="hero-note">Google Analytics is page-view only; file details are not sent.</p>
@@ -207,17 +207,17 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
             <h2>Choose a tool</h2>
           </div>
           <div className="tool-cards">
-            <RouteLink className="tool-card primary-tool" href="/privacy-check">
+            <RouteLink className="tool-card primary-tool" href="/meta-stripper">
               <ShieldCheck size={28} />
               <div>
-                <h3>Privacy Check</h3>
-                <p>Find common image metadata risks and download a cleaned copy.</p>
+                <h3>Image Meta Stripper</h3>
+                <p>Show image metadata, strip it, and download a cleaned copy.</p>
               </div>
             </RouteLink>
             <RouteLink className="tool-card" href="/compress">
               <ImageIcon size={28} />
               <div>
-                <h3>Photo Compressor</h3>
+                <h3>Image Compressor</h3>
                 <p>Resize and compress JPEG, PNG, and WebP images locally.</p>
               </div>
             </RouteLink>
@@ -230,7 +230,7 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
   );
 }
 
-function PrivacyCheckPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps> }) {
+function ImageMetaStripperPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps> }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [items, setItems] = useState<PrivacyItem[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -340,7 +340,7 @@ function PrivacyCheckPage({ RouteLink }: { RouteLink: React.ComponentType<RouteL
                 Local processing
               </span>
             </div>
-            <h1>Image Privacy Check</h1>
+            <h1>Image Meta Stripper</h1>
             <p className="hero-sub">
               Inspect images for common metadata risks, then re-encode a clean copy where your browser supports it.
               <b> Your files never leave your device.</b>
@@ -355,7 +355,7 @@ function PrivacyCheckPage({ RouteLink }: { RouteLink: React.ComponentType<RouteL
       <section className="band band-tray">
         <div className="wrap">
           <div className="privacy-grid">
-            <aside className="privacy-summary" aria-label="Privacy Check summary">
+            <aside className="privacy-summary" aria-label="Image Meta Stripper summary">
               <div className="panel-heading">
                 <FileSearch size={16} />
                 <h2>Report</h2>
@@ -493,7 +493,7 @@ function PrivacyCheckPage({ RouteLink }: { RouteLink: React.ComponentType<RouteL
   );
 }
 
-function PhotoCompressorPage() {
+function ImageCompressorPage() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [settings, setSettings] = useState<ShrinkSettings>(DEFAULT_SETTINGS);
   const [jobs, setJobs] = useState<ImageJob[]>([]);
@@ -724,7 +724,7 @@ function PhotoCompressorPage() {
                 Local
               </span>
             </div>
-            <h1>Photo Compressor</h1>
+            <h1>Image Compressor</h1>
             <p className="hero-sub">
               Resize and compress images entirely in your browser. <b>Your files never leave your device.</b>
             </p>
@@ -1178,8 +1178,8 @@ function Footer({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps> 
           <img src="/logo.png" alt="NoUpload" />
         </RouteLink>
         <div className="foot-links">
-          <RouteLink href="/privacy-check">Privacy Check</RouteLink>
-          <RouteLink href="/compress">Photo Compressor</RouteLink>
+          <RouteLink href="/meta-stripper">Image Meta Stripper</RouteLink>
+          <RouteLink href="/compress">Image Compressor</RouteLink>
           <a href="#legal">Privacy &amp; terms</a>
           <a href="https://github.com/ToddCole/noupload" target="_blank" rel="noreferrer">
             View source
@@ -1224,8 +1224,8 @@ function StatusPill({ status, busy }: { status: PrivacyStatus | undefined; busy:
 }
 
 function normalizeRoute(pathname: string): RoutePath {
-  if (pathname === '/privacy-check') {
-    return '/privacy-check';
+  if (pathname === '/meta-stripper' || pathname === '/privacy-check') {
+    return '/meta-stripper';
   }
   if (pathname === '/compress') {
     return '/compress';

@@ -230,7 +230,7 @@ function unsupportedReport(canInspect: boolean): PrivacyReport {
     metadata: [],
     canClean: false,
     canInspect,
-    message: 'Privacy Check V1 supports image files only.',
+    message: 'Image Meta Stripper supports image files only.',
   };
 }
 

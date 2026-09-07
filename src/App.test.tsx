@@ -16,23 +16,30 @@ describe('app routes', () => {
     render(<App />);
 
     expect(screen.getByRole('heading', { name: 'NoUpload private file tools' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Open Privacy Check/i })).toHaveAttribute('href', '/privacy-check');
-    expect(screen.getByRole('link', { name: /Open Compressor/i })).toHaveAttribute('href', '/compress');
+    expect(screen.getByRole('link', { name: /Open Meta Stripper/i })).toHaveAttribute('href', '/meta-stripper');
+    expect(screen.getByRole('link', { name: /Open Image Compressor/i })).toHaveAttribute('href', '/compress');
   });
 
-  it('renders Privacy Check at /privacy-check', () => {
-    window.history.replaceState({}, '', '/privacy-check');
+  it('renders Image Meta Stripper at /meta-stripper', () => {
+    window.history.replaceState({}, '', '/meta-stripper');
     render(<App />);
 
-    expect(screen.getByRole('heading', { name: 'Image Privacy Check' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Image Meta Stripper' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Check images/i })).toBeDisabled();
   });
 
-  it('renders Photo Compressor at /compress', () => {
+  it('keeps the old privacy-check route working as an alias', () => {
+    window.history.replaceState({}, '', '/privacy-check');
+    render(<App />);
+
+    expect(screen.getByRole('heading', { name: 'Image Meta Stripper' })).toBeInTheDocument();
+  });
+
+  it('renders Image Compressor at /compress', () => {
     window.history.replaceState({}, '', '/compress');
     render(<App />);
 
-    expect(screen.getByRole('heading', { name: 'Photo Compressor' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Image Compressor' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Develop/i })).toBeDisabled();
   });
 });

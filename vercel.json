@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/meta-stripper",
+      "destination": "/index.html"
+    },
+    {
       "source": "/privacy-check",
       "destination": "/index.html"
     },
