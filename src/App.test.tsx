@@ -15,7 +15,7 @@ describe('app routes', () => {
     window.history.replaceState({}, '', '/');
     render(<App />);
 
-    expect(screen.getByRole('heading', { name: 'NoUpload private file tools' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Prepare photos safely before you share them' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Open Meta Stripper/i })).toHaveAttribute('href', '/meta-stripper');
     expect(screen.getByRole('link', { name: /Open Image Compressor/i })).toHaveAttribute('href', '/compress');
     expect(screen.getAllByRole('link', { name: /Image Redactor/i }).some((link) => link.getAttribute('href') === '/redact')).toBe(

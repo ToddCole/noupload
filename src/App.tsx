@@ -194,9 +194,9 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
                 Local
               </span>
             </div>
-            <h1>NoUpload private file tools</h1>
+            <h1>Prepare photos safely before you share them</h1>
             <p className="hero-sub">
-              Check and prepare sensitive images in your browser. <b>Your files never leave your device.</b>
+              Remove hidden metadata, cover sensitive details, and verify the cleaned copy in your browser. <b>Your files never leave your device.</b>
             </p>
             <div className="hero-ctas">
               <RouteLink className="btn btn-primary" href="/share-safe">

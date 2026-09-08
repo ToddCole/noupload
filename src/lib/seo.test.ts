@@ -56,6 +56,8 @@ describe('seo helpers', () => {
   });
 
   it('ships route-specific static HTML for crawlers before React loads', () => {
+    expect(homeHtml).toContain('<title>Prepare Photos Safely Before Sharing | NoUpload</title>');
+    expect(homeHtml).toContain('Remove photo metadata, cover sensitive details');
     expect(homeHtml).toContain('<link rel="canonical" href="https://noupload.services/" />');
     expect(metaStripperHtml).toContain(
       '<title>Image Meta Stripper - Strip Image Metadata Locally | NoUpload</title>',
@@ -64,6 +66,8 @@ describe('seo helpers', () => {
     expect(metaStripperHtml).toContain('<meta property="og:url" content="https://noupload.services/meta-stripper" />');
     expect(shareSafeHtml).toContain('<title>Share-Safe Image Cleaner - Strip, Check, and Verify | NoUpload</title>');
     expect(shareSafeHtml).toContain('<link rel="canonical" href="https://noupload.services/share-safe" />');
+    expect(shareSafeHtml).toContain('"@type": "SoftwareApplication"');
+    expect(shareSafeHtml).toContain('"name": "NoUpload Share-Safe Image Cleaner"');
     expect(redactHtml).toContain('<title>Image Redactor - Redact Images Locally | NoUpload</title>');
     expect(redactHtml).toContain('<link rel="canonical" href="https://noupload.services/redact" />');
     expect(redactHtml).toContain('<meta property="og:url" content="https://noupload.services/redact" />');
@@ -74,5 +78,8 @@ describe('seo helpers', () => {
 
   it('keeps the Image Redactor JSON-LD hash available for CSP', () => {
     expect(vercelConfig).toContain('sha256-n6yp7paxTxqZwjcG53MVD67B+eF3BnEGfta8CTIJCgw=');
+    expect(vercelConfig).toContain('sha256-LMMG26AyUIxLH3nAhSUzMhuPSfZDiW2HchDZfbZ47rk=');
+    expect(vercelConfig).toContain('sha256-P937eCXqdgHQfd+KpiJWei/pZtMysB5xuEgF7p2oRbo=');
+    expect(vercelConfig).toContain('sha256-FPRRq34zGuXv/GsYGyi3AerJNPVtp5/RrpRBb2aXAPY=');
   });
 });

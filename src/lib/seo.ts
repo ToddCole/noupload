@@ -8,9 +8,9 @@ const SITE_URL = 'https://noupload.services';
 
 export const SEO_BY_ROUTE = {
   '/': {
-    title: 'NoUpload - Image Meta Stripper, Redactor, and Compressor',
+    title: 'Prepare Photos Safely Before Sharing | NoUpload',
     description:
-      'Strip image metadata, redact sensitive areas, and compress images entirely in your browser. Your files never leave your device.',
+      'Remove photo metadata, cover sensitive details, and verify a clean image before sharing. Everything runs locally in your browser.',
     path: '/',
   },
   '/share-safe': {
