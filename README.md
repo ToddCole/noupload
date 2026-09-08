@@ -19,6 +19,7 @@ Image processing happens on-device via browser APIs and `<canvas>`. Your images 
 
 - `/` — suite home
 - `/share-safe` — inspect, clean, and verify an image before sharing
+- `/remove-gps-from-photo` — check and remove GPS location metadata from photos
 - `/meta-stripper` — image metadata inspection and cleaning
 - `/redact` — manual image redaction
 - `/compress` — image resizing and compression

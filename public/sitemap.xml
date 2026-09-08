@@ -16,6 +16,11 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://noupload.services/remove-gps-from-photo</loc>
+    <lastmod>2026-09-08</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://noupload.services/redact</loc>
     <lastmod>2026-09-07</lastmod>
     <priority>0.9</priority>

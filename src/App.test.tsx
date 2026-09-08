@@ -47,6 +47,18 @@ describe('app routes', () => {
     );
   });
 
+  it('renders the GPS metadata landing page', () => {
+    window.history.replaceState({}, '', '/remove-gps-from-photo');
+    render(<App />);
+
+    expect(screen.getByRole('heading', { name: 'Remove GPS Location Data from Photos' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Check images/i })).toBeDisabled();
+    expect(document.title).toBe('Remove GPS Location Data from Photos | NoUpload');
+    expect(document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href).toBe(
+      'https://noupload.services/remove-gps-from-photo',
+    );
+  });
+
   it('renders Image Meta Stripper with a trailing slash', () => {
     window.history.replaceState({}, '', '/meta-stripper/');
     render(<App />);

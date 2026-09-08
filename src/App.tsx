@@ -52,7 +52,7 @@ import {
 import { applySeo, SEO_BY_ROUTE } from './lib/seo';
 import { trackImageExport } from './lib/analytics';
 
-type RoutePath = '/' | '/share-safe' | '/meta-stripper' | '/redact' | '/compress';
+type RoutePath = '/' | '/share-safe' | '/remove-gps-from-photo' | '/meta-stripper' | '/redact' | '/compress';
 
 interface RouteLinkProps {
   href: RoutePath | string;
@@ -123,7 +123,7 @@ export function App() {
   }, []);
 
   const RouteLink = ({ href, className, children }: RouteLinkProps) => {
-    const isInternal = href === '/' || href === '/share-safe' || href === '/meta-stripper' || href === '/redact' || href === '/compress';
+    const isInternal = href === '/' || href === '/share-safe' || href === '/remove-gps-from-photo' || href === '/meta-stripper' || href === '/redact' || href === '/compress';
     return (
       <a
         className={className}
@@ -168,6 +168,7 @@ export function App() {
       <main id="top">
         {route === '/' ? <HubPage RouteLink={RouteLink} /> : null}
         {route === '/share-safe' ? <ShareSafePage RouteLink={RouteLink} /> : null}
+        {route === '/remove-gps-from-photo' ? <ImageMetaStripperPage RouteLink={RouteLink} title="Remove GPS Location Data from Photos" intro="Check photos for hidden GPS coordinates, camera details, and other EXIF metadata, then download a clean copy before sharing." /> : null}
         {route === '/meta-stripper' ? <ImageMetaStripperPage RouteLink={RouteLink} /> : null}
         {route === '/redact' ? <ImageRedactorPage RouteLink={RouteLink} /> : null}
         {route === '/compress' ? <ImageCompressorPage /> : null}
@@ -509,7 +510,15 @@ function ShareSafePage({ RouteLink }: { RouteLink: React.ComponentType<RouteLink
   );
 }
 
-function ImageMetaStripperPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps> }) {
+function ImageMetaStripperPage({
+  RouteLink,
+  title = 'Image Meta Stripper',
+  intro = 'Inspect images for common metadata risks, then re-encode a clean copy where your browser supports it.',
+}: {
+  RouteLink: React.ComponentType<RouteLinkProps>;
+  title?: string;
+  intro?: string;
+}) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [items, setItems] = useState<PrivacyItem[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -620,9 +629,9 @@ function ImageMetaStripperPage({ RouteLink }: { RouteLink: React.ComponentType<R
                 Local processing
               </span>
             </div>
-            <h1>Image Meta Stripper</h1>
+            <h1>{title}</h1>
             <p className="hero-sub">
-              Inspect images for common metadata risks, then re-encode a clean copy where your browser supports it.
+              {intro}
               <b> Your files never leave your device.</b>
             </p>
           </div>
@@ -1727,6 +1736,7 @@ function Footer({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps> 
         </RouteLink>
         <div className="foot-links">
           <RouteLink href="/share-safe">Share-Safe Workflow</RouteLink>
+          <RouteLink href="/remove-gps-from-photo">Remove GPS from Photos</RouteLink>
           <RouteLink href="/meta-stripper">Image Meta Stripper</RouteLink>
           <RouteLink href="/redact">Image Redactor</RouteLink>
           <RouteLink href="/compress">Image Compressor</RouteLink>
@@ -1777,6 +1787,9 @@ function normalizeRoute(pathname: string): RoutePath {
   const path = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
   if (path === '/share-safe') {
     return '/share-safe';
+  }
+  if (path === '/remove-gps-from-photo') {
+    return '/remove-gps-from-photo';
   }
   if (path === '/meta-stripper' || path === '/privacy-check') {
     return '/meta-stripper';

@@ -29,6 +29,14 @@
       "destination": "/share-safe/index.html"
     },
     {
+      "source": "/remove-gps-from-photo",
+      "destination": "/remove-gps-from-photo/index.html"
+    },
+    {
+      "source": "/remove-gps-from-photo/",
+      "destination": "/remove-gps-from-photo/index.html"
+    },
+    {
       "source": "/redact",
       "destination": "/redact/index.html"
     },

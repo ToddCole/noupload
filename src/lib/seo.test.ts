@@ -3,6 +3,7 @@ import compressHtml from '../../compress/index.html?raw';
 import homeHtml from '../../index.html?raw';
 import metaStripperHtml from '../../meta-stripper/index.html?raw';
 import shareSafeHtml from '../../share-safe/index.html?raw';
+import removeGpsHtml from '../../remove-gps-from-photo/index.html?raw';
 import redactHtml from '../../redact/index.html?raw';
 import vercelConfig from '../../vercel.json?raw';
 import { applySeo, canonicalUrl, SEO_BY_ROUTE } from './seo';
@@ -68,6 +69,8 @@ describe('seo helpers', () => {
     expect(shareSafeHtml).toContain('<link rel="canonical" href="https://noupload.services/share-safe" />');
     expect(shareSafeHtml).toContain('"@type": "SoftwareApplication"');
     expect(shareSafeHtml).toContain('"name": "NoUpload Share-Safe Image Cleaner"');
+    expect(removeGpsHtml).toContain('<title>Remove GPS Location Data from Photos | NoUpload</title>');
+    expect(removeGpsHtml).toContain('<link rel="canonical" href="https://noupload.services/remove-gps-from-photo" />');
     expect(redactHtml).toContain('<title>Image Redactor - Redact Images Locally | NoUpload</title>');
     expect(redactHtml).toContain('<link rel="canonical" href="https://noupload.services/redact" />');
     expect(redactHtml).toContain('<meta property="og:url" content="https://noupload.services/redact" />');

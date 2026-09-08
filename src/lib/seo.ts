@@ -19,6 +19,12 @@ export const SEO_BY_ROUTE = {
       'Prepare images before sharing: inspect metadata, remove hidden image details, and verify the cleaned copy entirely in your browser.',
     path: '/share-safe',
   },
+  '/remove-gps-from-photo': {
+    title: 'Remove GPS Location Data from Photos | NoUpload',
+    description:
+      'Check photos for GPS coordinates and EXIF metadata, then download a clean copy locally in your browser before sharing.',
+    path: '/remove-gps-from-photo',
+  },
   '/meta-stripper': {
     title: 'Image Meta Stripper - Strip Image Metadata Locally | NoUpload',
     description:
