@@ -1088,7 +1088,7 @@ function ImageRedactorPage({ RouteLink }: { RouteLink: React.ComponentType<Route
   return (
     <>
       <section className="tool-hero">
-        <div className="wrap tool-hero-inner">
+        <div className="wrap tool-hero-inner with-demo">
           <div>
             <div className="hero-badges">
               <span className="hero-badge">
@@ -1110,9 +1110,50 @@ function ImageRedactorPage({ RouteLink }: { RouteLink: React.ComponentType<Route
               license plate or door number visible in a listing photo.
             </p>
           </div>
-          <RouteLink className="btn btn-ghost" href="/">
-            Suite hub
-          </RouteLink>
+
+          <div className="tool-hero-side">
+            <RouteLink className="btn btn-ghost" href="/">
+              Suite hub
+            </RouteLink>
+
+            <div className="suite-demo tool-hero-demo" aria-label="Real example: a license plate covered with Image Redactor">
+              <div className="demo-header">
+                <div>
+                  <span>Real example</span>
+                  <strong>Plate covered</strong>
+                </div>
+                <span className="demo-status">1 area redacted</span>
+              </div>
+
+              <div className="demo-hero-photo">
+                <img
+                  src="/demo/tesla-plate-redacted.jpg"
+                  alt="Car with its license plate covered using Image Redactor"
+                  width={1000}
+                  height={666}
+                  loading="lazy"
+                />
+              </div>
+
+              <div className="demo-formats">
+                <span>Modes</span>
+                <span className="format-chip">Black box</span>
+                <span className="format-chip">Blur</span>
+                <span className="format-chip">Pixelate</span>
+              </div>
+
+              <div className="demo-footer">
+                <span>
+                  <CheckCircle2 size={15} />
+                  Not recoverable from export
+                </span>
+                <span>
+                  <Download size={15} />
+                  Ready to share
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1535,7 +1576,7 @@ function ImageCompressorPage({ RouteLink }: { RouteLink: React.ComponentType<Rou
               Suite hub
             </RouteLink>
 
-            <div className="suite-demo compress-hero-demo" aria-label="Real example: this photo compressed from 38.6 MB to 235 KB">
+            <div className="suite-demo tool-hero-demo" aria-label="Real example: this photo compressed from 38.6 MB to 235 KB">
               <div className="demo-header">
                 <div>
                   <span>Real example</span>
@@ -1544,7 +1585,7 @@ function ImageCompressorPage({ RouteLink }: { RouteLink: React.ComponentType<Rou
                 <span className="demo-status">−99% size</span>
               </div>
 
-              <div className="compress-demo-photo">
+              <div className="demo-hero-photo">
                 <img
                   src="/demo/perast-harbor.webp"
                   alt="Harbor town at sunset, compressed with Image Compressor"
@@ -1554,7 +1595,7 @@ function ImageCompressorPage({ RouteLink }: { RouteLink: React.ComponentType<Rou
                 />
               </div>
 
-              <div className="compress-demo-stats">
+              <div className="demo-hero-stats">
                 <div className="size-stat">
                   <span>Original JPEG</span>
                   <b>38.6 MB</b>

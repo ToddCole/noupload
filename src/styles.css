@@ -231,24 +231,24 @@ footer .logo-mark img {
   gap: 18px;
 }
 
-.compress-hero-demo {
+.tool-hero-demo {
   width: 100%;
 }
 
-.compress-demo-photo {
+.demo-hero-photo {
   aspect-ratio: 3 / 2;
   border-bottom: 1px solid var(--hairline);
   overflow: hidden;
 }
 
-.compress-demo-photo img {
+.demo-hero-photo img {
   display: block;
   height: 100%;
   object-fit: cover;
   width: 100%;
 }
 
-.compress-demo-stats {
+.demo-hero-stats {
   padding: 16px 18px 4px;
 }
 
