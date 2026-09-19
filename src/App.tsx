@@ -4,7 +4,6 @@ import {
   Archive,
   BadgeCheck,
   CheckCircle2,
-  ChevronsRight,
   Download,
   FilePenLine,
   FileSearch,
@@ -1528,25 +1527,47 @@ function ImageCompressorPage({ RouteLink }: { RouteLink: React.ComponentType<Rou
               Suite hub
             </RouteLink>
 
-            <div className="suite-demo compress-hero-demo" aria-label="Example: an image shrunk from 4.8 MB to 612 KB">
+            <div className="suite-demo compress-hero-demo" aria-label="Real example: this photo compressed from 270 KB to 104 KB">
               <div className="demo-header">
                 <div>
-                  <span>Same photo</span>
-                  <strong>Before / after</strong>
+                  <span>Real example</span>
+                  <strong>Same photo, compressed</strong>
                 </div>
-                <span className="demo-status">−87% size</span>
+                <span className="demo-status">−62% size</span>
               </div>
 
-              <div className="squeeze-row">
-                <div className="squeeze-photo is-original">
-                  <ImageIcon size={30} />
-                  <span>4.8 MB</span>
+              <div className="compress-demo-photo">
+                <img
+                  src="/demo/perast-harbor.webp"
+                  alt="Harbor town at sunset, compressed with Image Compressor"
+                  width={1002}
+                  height={668}
+                  loading="lazy"
+                />
+              </div>
+
+              <div className="compress-demo-stats">
+                <div className="size-stat">
+                  <span>Original JPEG</span>
+                  <b>270 KB</b>
                 </div>
-                <ChevronsRight className="squeeze-arrow" size={22} aria-hidden="true" />
-                <div className="squeeze-photo is-output">
-                  <ImageIcon size={20} />
-                  <span>612 KB</span>
+                <div className="size-bar">
+                  <span style={{ width: '100%' }} />
                 </div>
+                <div className="size-stat">
+                  <span>Compressed WebP</span>
+                  <b>104 KB</b>
+                </div>
+                <div className="size-bar output">
+                  <span style={{ width: '39%' }} />
+                </div>
+              </div>
+
+              <div className="demo-formats">
+                <span>Save as</span>
+                <span className="format-chip">JPEG</span>
+                <span className="format-chip">PNG</span>
+                <span className="format-chip">WebP</span>
               </div>
 
               <div className="demo-footer">
