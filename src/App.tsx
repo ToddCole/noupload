@@ -50,9 +50,9 @@ import {
   verifyCleanImage,
 } from './lib/privacyCheck';
 import { applySeo, SEO_BY_ROUTE } from './lib/seo';
-import { trackImageExport } from './lib/analytics';
+import { initAnalytics, trackImageExport } from './lib/analytics';
 
-type RoutePath = '/' | '/share-safe' | '/remove-gps-from-photo' | '/meta-stripper' | '/redact' | '/compress';
+export type RoutePath = '/' | '/share-safe' | '/remove-gps-from-photo' | '/meta-stripper' | '/redact' | '/compress';
 
 interface RouteLinkProps {
   href: RoutePath | string;
@@ -100,8 +100,10 @@ const FAQ_ITEMS = [
   },
 ];
 
-export function App() {
-  const [route, setRoute] = useState<RoutePath>(() => normalizeRoute(window.location.pathname));
+export function App({ initialRoute }: { initialRoute?: RoutePath } = {}) {
+  const [route, setRoute] = useState<RoutePath>(
+    () => initialRoute ?? (typeof window !== 'undefined' ? normalizeRoute(window.location.pathname) : '/'),
+  );
 
   useEffect(() => {
     const onPopState = () => setRoute(normalizeRoute(window.location.pathname));
@@ -112,6 +114,10 @@ export function App() {
   useEffect(() => {
     applySeo(SEO_BY_ROUTE[route]);
   }, [route]);
+
+  useEffect(() => {
+    initAnalytics();
+  }, []);
 
   const navigate = useCallback((path: RoutePath) => {
     if (path === normalizeRoute(window.location.pathname)) {
