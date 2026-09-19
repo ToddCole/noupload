@@ -349,6 +349,9 @@ export function App({ initialRoute }: { initialRoute?: RoutePath } = {}) {
             <img src="/logo.png" alt="NoUpload" />
           </RouteLink>
           <nav className="nav-actions">
+            <RouteLink className={`nav-link ${route === '/compress' ? 'is-active' : ''}`} href="/compress">
+              Image Compressor
+            </RouteLink>
             <RouteLink className={`nav-link ${route === '/share-safe' ? 'is-active' : ''}`} href="/share-safe">
               Share-Safe
             </RouteLink>
@@ -357,9 +360,6 @@ export function App({ initialRoute }: { initialRoute?: RoutePath } = {}) {
             </RouteLink>
             <RouteLink className={`nav-link ${route === '/redact' ? 'is-active' : ''}`} href="/redact">
               Image Redactor
-            </RouteLink>
-            <RouteLink className={`nav-link ${route === '/compress' ? 'is-active' : ''}`} href="/compress">
-              Image Compressor
             </RouteLink>
           </nav>
         </div>
