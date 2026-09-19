@@ -379,7 +379,7 @@ export function App({ initialRoute }: { initialRoute?: RoutePath } = {}) {
         ) : null}
         {route === '/meta-stripper' ? <ImageMetaStripperPage RouteLink={RouteLink} /> : null}
         {route === '/redact' ? <ImageRedactorPage RouteLink={RouteLink} /> : null}
-        {route === '/compress' ? <ImageCompressorPage /> : null}
+        {route === '/compress' ? <ImageCompressorPage RouteLink={RouteLink} /> : null}
       </main>
 
       <Footer RouteLink={RouteLink} />
@@ -1280,7 +1280,7 @@ function ImageRedactorPage({ RouteLink }: { RouteLink: React.ComponentType<Route
   );
 }
 
-function ImageCompressorPage() {
+function ImageCompressorPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps> }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [settings, setSettings] = useState<ShrinkSettings>(DEFAULT_SETTINGS);
   const [jobs, setJobs] = useState<ImageJob[]>([]);
@@ -1513,9 +1513,17 @@ function ImageCompressorPage() {
             </div>
             <h1>Image Compressor</h1>
             <p className="hero-sub">
-              Resize and compress images entirely in your browser. <b>Your files never leave your device.</b>
+              Resize and compress JPEG, PNG, and WebP images entirely in your browser, with no upload step and no
+              size limit beyond your own device's memory. <b>Your files never leave your device.</b>
+            </p>
+            <p className="hero-sub">
+              Built for shrinking photos before you email them, hitting a CMS or marketplace's upload size limit,
+              or batch-compressing a folder of images for the web without installing anything.
             </p>
           </div>
+          <RouteLink className="btn btn-ghost" href="/">
+            Suite hub
+          </RouteLink>
         </div>
       </section>
 
