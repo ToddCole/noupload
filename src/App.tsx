@@ -478,19 +478,27 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
                   <ImageIcon size={17} />
                   <span>File size reduced</span>
                 </div>
+                <img
+                  className="compress-demo-thumb"
+                  src="/demo/perast-harbor.webp"
+                  alt=""
+                  width={320}
+                  height={180}
+                  loading="lazy"
+                />
                 <div className="size-stat">
                   <span>Original</span>
-                  <b>4.8 MB</b>
+                  <b>38.6 MB</b>
                 </div>
                 <div className="size-bar">
                   <span style={{ width: '100%' }} />
                 </div>
                 <div className="size-stat">
                   <span>Output</span>
-                  <b>612 KB</b>
+                  <b>235 KB</b>
                 </div>
                 <div className="size-bar output">
-                  <span style={{ width: '22%' }} />
+                  <span style={{ width: '3%' }} />
                 </div>
               </div>
             </div>

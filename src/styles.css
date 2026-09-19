@@ -445,6 +445,16 @@ footer .logo-mark img {
   grid-row: span 2;
 }
 
+.compress-demo-thumb {
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  display: block;
+  height: auto;
+  margin-bottom: 12px;
+  object-fit: cover;
+  width: 100%;
+}
+
 .demo-panel-head {
   align-items: center;
   color: var(--paper);
