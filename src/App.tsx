@@ -10,6 +10,7 @@ import {
   Image as ImageIcon,
   Images,
   Laptop,
+  type LucideIcon,
   Loader2,
   Lock,
   ScanLine,
@@ -77,7 +78,40 @@ const REDACTION_MODES: Array<{ mode: RedactionMode; label: string }> = [
   { mode: 'pixelate', label: 'Pixelate' },
 ];
 
-const FAQ_ITEMS = [
+interface InfoStep {
+  verb: string;
+  icon: LucideIcon;
+  title: string;
+  body: string;
+}
+
+interface FaqEntry {
+  q: string;
+  a: string;
+}
+
+const COMPRESSOR_STEPS: InfoStep[] = [
+  {
+    verb: 'Load',
+    icon: Upload,
+    title: 'Drop in your images',
+    body: 'JPEG, PNG, or WebP. Batch as many as you like, all at once.',
+  },
+  {
+    verb: 'Develop',
+    icon: ImageIcon,
+    title: 'It resizes, right there',
+    body: 'Your browser does the resizing and compressing. Nothing is transmitted.',
+  },
+  {
+    verb: 'Collect',
+    icon: Archive,
+    title: 'Download, ready for the web',
+    body: 'Grab files one at a time, or everything together as a zip.',
+  },
+];
+
+const COMPRESSOR_FAQ: FaqEntry[] = [
   {
     q: 'Is this really private?',
     a: "Yes. File processing happens using your browser's own tools. Google Analytics records page views and anonymous aggregate export counts, but NoUpload does not send image data, filenames, metadata values, file sizes, or other file details to analytics.",
@@ -87,16 +121,176 @@ const FAQ_ITEMS = [
     a: 'JPEG, PNG, and WebP in. Output as Auto, WebP, JPEG, or PNG.',
   },
   {
-    q: 'What does Image Meta Stripper inspect?',
-    a: 'Image Meta Stripper looks for common metadata categories in image files: location, camera/device details, dates, author fields, software fields, embedded previews, and obvious format mismatches.',
-  },
-  {
     q: 'Is there a batch or file size limit?',
     a: "No artificial limit. You're bound by your own device's memory, so very large batches may run slower on older hardware.",
   },
   {
+    q: 'How does Target KB work?',
+    a: "Turn on Aim under and set a target size in KB. Image Compressor re-encodes at decreasing quality until the output fits your target or hits the lowest usable quality, whichever comes first.",
+  },
+  {
     q: 'Do you see my images?',
     a: "No. There's no server-side file processing path in NoUpload, so your images stay on your device.",
+  },
+];
+
+const SHARE_SAFE_STEPS: InfoStep[] = [
+  {
+    verb: 'Inspect',
+    icon: FileSearch,
+    title: 'Scan for privacy risks',
+    body: 'Share-Safe checks the image for GPS coordinates, camera and device details, dates, author fields, and embedded previews.',
+  },
+  {
+    verb: 'Clean',
+    icon: ShieldCheck,
+    title: 'Remove what it finds',
+    body: 'Flagged metadata is stripped and the image is re-encoded into a new file, without ever leaving your browser.',
+  },
+  {
+    verb: 'Verify',
+    icon: CheckCircle2,
+    title: 'Confirm the copy is clean',
+    body: 'The exported file is automatically re-inspected, so you can see the result before you send it anywhere.',
+  },
+];
+
+const SHARE_SAFE_FAQ: FaqEntry[] = [
+  {
+    q: 'Who is Share-Safe for?',
+    a: 'Anyone about to send or post a photo they did not take with sharing in mind: client deliverables, listing photos, screenshots for support tickets, or personal photos going to family or a group chat.',
+  },
+  {
+    q: 'What counts as a privacy risk here?',
+    a: 'Common categories: GPS/location, camera and device identifiers, capture dates, author or software fields, and embedded thumbnail previews that can retain the original image data.',
+  },
+  {
+    q: 'Does cleaning change how the photo looks?',
+    a: 'No. Cleaning removes embedded metadata fields and re-encodes the file; it does not crop, resize, or alter the visible image.',
+  },
+  {
+    q: 'What if verification finds something left over?',
+    a: 'The verification step will flag it and tell you what remains. You can re-run cleaning or use Image Redactor if the concern is something visible in the photo rather than metadata.',
+  },
+];
+
+const META_STRIPPER_STEPS: InfoStep[] = [
+  {
+    verb: 'Load',
+    icon: Upload,
+    title: 'Add one photo or a batch',
+    body: 'JPEG, PNG, and HEIC/HEIF where your browser supports it.',
+  },
+  {
+    verb: 'Inspect',
+    icon: FileSearch,
+    title: 'See exactly what is embedded',
+    body: 'Image Meta Stripper reads EXIF, GPS, ICC, XMP, author, and software fields directly in your browser.',
+  },
+  {
+    verb: 'Strip',
+    icon: Download,
+    title: 'Download a clean copy',
+    body: 'Flagged fields are removed and a re-encoded file is saved, ready to share or post.',
+  },
+];
+
+const META_STRIPPER_FAQ: FaqEntry[] = [
+  {
+    q: 'What metadata does this actually find?',
+    a: 'Common categories: GPS/location, camera and device details, capture dates, author and software fields, embedded thumbnail previews, and obvious format mismatches.',
+  },
+  {
+    q: 'Will stripping metadata change image quality?',
+    a: 'Image Meta Stripper re-encodes the file to remove embedded fields; it does not intentionally reduce resolution or visual quality.',
+  },
+  {
+    q: 'Can I check a photo without exporting anything?',
+    a: 'Yes. Inspecting a photo only reads it in memory; nothing is downloaded until you choose to clean and export.',
+  },
+  {
+    q: "My phone already strips this when I share a photo. Why check?",
+    a: "Not every app, upload path, or messaging client strips metadata consistently, and some preserve embedded thumbnail previews. Checking directly removes the guesswork.",
+  },
+];
+
+const REMOVE_GPS_STEPS: InfoStep[] = [
+  {
+    verb: 'Load',
+    icon: Upload,
+    title: 'Add your photo',
+    body: 'JPEG, PNG, and HEIC/HEIF where your browser supports it.',
+  },
+  {
+    verb: 'Check',
+    icon: ScanLine,
+    title: 'See the GPS and EXIF data',
+    body: 'View exactly what location and camera details are embedded before deciding what to remove.',
+  },
+  {
+    verb: 'Strip',
+    icon: Download,
+    title: 'Download the clean version',
+    body: 'GPS coordinates and other flagged metadata are removed from a re-encoded copy.',
+  },
+];
+
+const REMOVE_GPS_FAQ: FaqEntry[] = [
+  {
+    q: 'Does my phone already remove GPS data when I share a photo?',
+    a: 'It depends on the app and share method, and some paths preserve it or leave an embedded preview with the original data. Checking directly confirms what is actually in the file.',
+  },
+  {
+    q: 'Will this affect photo quality?',
+    a: 'No. Removing embedded metadata does not change the visible image.',
+  },
+  {
+    q: 'What other data does this check besides GPS?',
+    a: 'Camera and device details, capture dates, author and software fields, and embedded thumbnail previews.',
+  },
+  {
+    q: 'Is this different from Image Meta Stripper?',
+    a: 'Same underlying tool, focused on the GPS/location use case. Image Meta Stripper covers the full set of metadata categories if you need a broader check.',
+  },
+];
+
+const REDACTOR_STEPS: InfoStep[] = [
+  {
+    verb: 'Load',
+    icon: Upload,
+    title: 'Add your image',
+    body: 'JPEG, PNG, or WebP.',
+  },
+  {
+    verb: 'Mark',
+    icon: Square,
+    title: 'Draw over sensitive areas',
+    body: 'Cover faces, names, addresses, plates, account numbers, or tokens with black box, blur, or pixelate.',
+  },
+  {
+    verb: 'Export',
+    icon: Download,
+    title: 'Download a flattened copy',
+    body: 'Redactions are baked into the pixels of a new file, and metadata is stripped on export.',
+  },
+];
+
+const REDACTOR_FAQ: FaqEntry[] = [
+  {
+    q: 'Can the original data be recovered from the redacted image?',
+    a: 'No. Export flattens your redaction boxes directly into the pixels of a new file and strips metadata; the covered content is not recoverable from the export.',
+  },
+  {
+    q: "What's the difference between black box, blur, and pixelate?",
+    a: 'Black box fully covers an area. Blur and pixelate obscure it while keeping a sense of the underlying shape, useful when you want the redaction to look less abrupt.',
+  },
+  {
+    q: 'Can I redact more than one area?',
+    a: 'Yes. Draw as many boxes as you need before exporting; use Undo area to remove the last one.',
+  },
+  {
+    q: 'Does this also strip other metadata?',
+    a: 'Yes. Exporting a redacted image also strips metadata from the flattened file.',
   },
 ];
 
@@ -174,7 +368,15 @@ export function App({ initialRoute }: { initialRoute?: RoutePath } = {}) {
       <main id="top">
         {route === '/' ? <HubPage RouteLink={RouteLink} /> : null}
         {route === '/share-safe' ? <ShareSafePage RouteLink={RouteLink} /> : null}
-        {route === '/remove-gps-from-photo' ? <ImageMetaStripperPage RouteLink={RouteLink} title="Remove GPS Location Data from Photos" intro="Check photos for hidden GPS coordinates, camera details, and other EXIF metadata, then download a clean copy before sharing." /> : null}
+        {route === '/remove-gps-from-photo' ? (
+          <ImageMetaStripperPage
+            RouteLink={RouteLink}
+            title="Remove GPS Location Data from Photos"
+            intro="Check photos for hidden GPS coordinates, camera details, and other EXIF metadata, then download a clean copy before sharing."
+            useCase="Useful before posting a photo taken at home, listing an item for sale, or sending a picture where you would rather not disclose where it was taken."
+            variant="remove-gps"
+          />
+        ) : null}
         {route === '/meta-stripper' ? <ImageMetaStripperPage RouteLink={RouteLink} /> : null}
         {route === '/redact' ? <ImageRedactorPage RouteLink={RouteLink} /> : null}
         {route === '/compress' ? <ImageCompressorPage /> : null}
@@ -434,6 +636,7 @@ function ShareSafePage({ RouteLink }: { RouteLink: React.ComponentType<RouteLink
             </div>
             <h1>Prepare an image before sharing</h1>
             <p className="hero-sub">Inspect hidden metadata, create a clean copy, and verify the exported file in this browser. <b>Your original stays on your device.</b></p>
+            <p className="hero-sub">Useful before sending client work, posting a listing photo, or forwarding a screenshot to a support team — anywhere the photo is leaving your hands.</p>
           </div>
           <RouteLink className="btn btn-ghost" href="/">Suite hub</RouteLink>
         </div>
@@ -511,7 +714,12 @@ function ShareSafePage({ RouteLink }: { RouteLink: React.ComponentType<RouteLink
           </div>
         </div>
       </section>
-      <TrustSections />
+      <ToolInfoSections
+        howHeading="Three steps, no upload."
+        steps={SHARE_SAFE_STEPS}
+        faqHeading="Common questions"
+        faqItems={SHARE_SAFE_FAQ}
+      />
     </>
   );
 }
@@ -520,10 +728,14 @@ function ImageMetaStripperPage({
   RouteLink,
   title = 'Image Meta Stripper',
   intro = 'Inspect images for common metadata risks, then re-encode a clean copy where your browser supports it.',
+  useCase = 'Useful before publishing a client gallery, listing an item for sale, or sending a photo where you would rather not disclose where it was taken.',
+  variant = 'meta-stripper',
 }: {
   RouteLink: React.ComponentType<RouteLinkProps>;
   title?: string;
   intro?: string;
+  useCase?: string;
+  variant?: 'meta-stripper' | 'remove-gps';
 }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [items, setItems] = useState<PrivacyItem[]>([]);
@@ -640,6 +852,7 @@ function ImageMetaStripperPage({
               {intro}
               <b> Your files never leave your device.</b>
             </p>
+            <p className="hero-sub">{useCase}</p>
           </div>
           <RouteLink className="btn btn-ghost" href="/">
             Suite hub
@@ -783,7 +996,12 @@ function ImageMetaStripperPage({
         </div>
       </section>
 
-      <TrustSections />
+      <ToolInfoSections
+        howHeading="Three steps, zero servers."
+        steps={variant === 'remove-gps' ? REMOVE_GPS_STEPS : META_STRIPPER_STEPS}
+        faqHeading="Common questions"
+        faqItems={variant === 'remove-gps' ? REMOVE_GPS_FAQ : META_STRIPPER_FAQ}
+      />
     </>
   );
 }
@@ -878,6 +1096,10 @@ function ImageRedactorPage({ RouteLink }: { RouteLink: React.ComponentType<Route
             <p className="hero-sub">
               Cover names, addresses, faces, plates, tokens, and other sensitive areas before sharing.
               <b> Your files never leave your device.</b>
+            </p>
+            <p className="hero-sub">
+              Useful for a screenshot with an account number in it, a face you want to blur before posting, or a
+              license plate or door number visible in a listing photo.
             </p>
           </div>
           <RouteLink className="btn btn-ghost" href="/">
@@ -1048,7 +1270,12 @@ function ImageRedactorPage({ RouteLink }: { RouteLink: React.ComponentType<Route
         </div>
       </section>
 
-      <TrustSections />
+      <ToolInfoSections
+        howHeading="Three steps, no upload."
+        steps={REDACTOR_STEPS}
+        faqHeading="Common questions"
+        faqItems={REDACTOR_FAQ}
+      />
     </>
   );
 }
@@ -1060,7 +1287,6 @@ function ImageCompressorPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isZipping, setIsZipping] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
   const [bulkName, setBulkName] = useState('');
 
@@ -1589,54 +1815,52 @@ function ImageCompressorPage() {
         </div>
       </section>
 
-      <CompressorInfo openFaq={openFaq} setOpenFaq={setOpenFaq} />
+      <ToolInfoSections
+        howHeading="Three steps, zero servers."
+        steps={COMPRESSOR_STEPS}
+        faqHeading="Still skeptical?"
+        faqItems={COMPRESSOR_FAQ}
+      />
     </>
   );
 }
 
-function CompressorInfo({
-  openFaq,
-  setOpenFaq,
+function ToolInfoSections({
+  howHeading,
+  steps,
+  faqHeading,
+  faqItems,
 }: {
-  openFaq: number | null;
-  setOpenFaq: React.Dispatch<React.SetStateAction<number | null>>;
+  howHeading: string;
+  steps: InfoStep[];
+  faqHeading: string;
+  faqItems: FaqEntry[];
 }) {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
   return (
     <>
       <section className="band" id="how">
         <div className="wrap">
           <div className="section-head">
-            <h2>Three steps, zero servers.</h2>
+            <h2>{howHeading}</h2>
           </div>
 
           <div className="frames">
-            <div className="frame">
-              <span className="frame-num" aria-hidden="true">
-                01
-              </span>
-              <span className="frame-verb">Load</span>
-              <Upload className="frame-icon" />
-              <h3>Drop in your images</h3>
-              <p>JPEG, PNG, or WebP. Batch as many as you like, all at once.</p>
-            </div>
-            <div className="frame">
-              <span className="frame-num" aria-hidden="true">
-                02
-              </span>
-              <span className="frame-verb">Develop</span>
-              <ImageIcon className="frame-icon" />
-              <h3>It resizes, right there</h3>
-              <p>Your browser does the resizing and compressing. Nothing is transmitted.</p>
-            </div>
-            <div className="frame">
-              <span className="frame-num" aria-hidden="true">
-                03
-              </span>
-              <span className="frame-verb">Collect</span>
-              <Archive className="frame-icon" />
-              <h3>Download, ready for the web</h3>
-              <p>Grab files one at a time, or everything together as a zip.</p>
-            </div>
+            {steps.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <div className="frame" key={step.title}>
+                  <span className="frame-num" aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span className="frame-verb">{step.verb}</span>
+                  <Icon className="frame-icon" />
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1646,11 +1870,11 @@ function CompressorInfo({
       <section className="band" id="faq">
         <div className="wrap">
           <div className="section-head">
-            <h2>Still skeptical?</h2>
+            <h2>{faqHeading}</h2>
           </div>
 
           <div className="faq-list">
-            {FAQ_ITEMS.map((item, index) => {
+            {faqItems.map((item, index) => {
               const isOpen = openFaq === index;
               return (
                 <div className={`faq-item ${isOpen ? 'is-open' : ''}`} key={item.q}>
