@@ -4,6 +4,7 @@ import {
   Archive,
   BadgeCheck,
   CheckCircle2,
+  ChevronsRight,
   Download,
   FilePenLine,
   FileSearch,
@@ -1499,7 +1500,7 @@ function ImageCompressorPage({ RouteLink }: { RouteLink: React.ComponentType<Rou
   return (
     <>
       <section className="tool-hero">
-        <div className="wrap tool-hero-inner">
+        <div className="wrap tool-hero-inner with-demo">
           <div>
             <div className="hero-badges">
               <span className="hero-badge">
@@ -1521,9 +1522,45 @@ function ImageCompressorPage({ RouteLink }: { RouteLink: React.ComponentType<Rou
               or batch-compressing a folder of images for the web without installing anything.
             </p>
           </div>
-          <RouteLink className="btn btn-ghost" href="/">
-            Suite hub
-          </RouteLink>
+
+          <div className="tool-hero-side">
+            <RouteLink className="btn btn-ghost" href="/">
+              Suite hub
+            </RouteLink>
+
+            <div className="suite-demo compress-hero-demo" aria-label="Example: an image shrunk from 4.8 MB to 612 KB">
+              <div className="demo-header">
+                <div>
+                  <span>Same photo</span>
+                  <strong>Before / after</strong>
+                </div>
+                <span className="demo-status">−87% size</span>
+              </div>
+
+              <div className="squeeze-row">
+                <div className="squeeze-photo is-original">
+                  <ImageIcon size={30} />
+                  <span>4.8 MB</span>
+                </div>
+                <ChevronsRight className="squeeze-arrow" size={22} aria-hidden="true" />
+                <div className="squeeze-photo is-output">
+                  <ImageIcon size={20} />
+                  <span>612 KB</span>
+                </div>
+              </div>
+
+              <div className="demo-footer">
+                <span>
+                  <CheckCircle2 size={15} />
+                  Same look, smaller file
+                </span>
+                <span>
+                  <Download size={15} />
+                  Ready to upload
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
