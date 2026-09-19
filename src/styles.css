@@ -1218,6 +1218,18 @@ input[type="range"] {
   box-shadow: 0 0 0 1px var(--accent-bright), 0 0 20px -4px var(--accent-bright);
 }
 
+.queue-summary button.queue-clear-btn {
+  background: var(--tray);
+  border: 1px solid var(--hairline-strong);
+  color: var(--paper);
+  margin-left: 0;
+}
+
+.queue-summary button.queue-clear-btn:hover:not(:disabled) {
+  border-color: var(--ash-dim);
+  box-shadow: none;
+}
+
 .bulk-rename-bar {
   align-items: center;
   border-bottom: 1px solid var(--hairline);

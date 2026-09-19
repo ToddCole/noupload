@@ -1295,9 +1295,6 @@ function ImageCompressorPage() {
               <p>right here, in this tab; your images are not sent anywhere</p>
             </div>
             <div className="tool-actions">
-              <button className="icon-button" type="button" onClick={clearJobs} disabled={jobs.length === 0} title="Clear">
-                <RotateCcw size={18} />
-              </button>
               <button className="btn btn-primary" type="button" onClick={() => inputRef.current?.click()} title="Add images">
                 <Upload size={16} />
                 Add
@@ -1480,6 +1477,10 @@ function ImageCompressorPage() {
                 <button type="button" onClick={downloadAll} disabled={completedResults.length === 0 || isZipping}>
                   {isZipping ? <Loader2 className="spin" size={18} /> : <Archive size={18} />}
                   ZIP
+                </button>
+                <button className="queue-clear-btn" type="button" onClick={clearJobs} disabled={jobs.length === 0} title="Clear all images">
+                  <RotateCcw size={18} />
+                  Clear all
                 </button>
               </div>
 
