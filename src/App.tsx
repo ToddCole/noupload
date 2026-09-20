@@ -172,6 +172,10 @@ const SHARE_SAFE_FAQ: FaqEntry[] = [
     q: 'What if verification finds something left over?',
     a: 'The verification step will flag it and tell you what remains. You can re-run cleaning or use Image Redactor if the concern is something visible in the photo rather than metadata.',
   },
+  {
+    q: "What's the difference between this and Image Meta Stripper?",
+    a: 'Same underlying engine, different shape: Share-Safe walks one image through inspect, clean, and a final verify step. Image Meta Stripper skips the verify step but handles a whole batch of images at once.',
+  },
 ];
 
 const META_STRIPPER_STEPS: InfoStep[] = [
@@ -211,6 +215,10 @@ const META_STRIPPER_FAQ: FaqEntry[] = [
   {
     q: "My phone already strips this when I share a photo. Why check?",
     a: "Not every app, upload path, or messaging client strips metadata consistently, and some preserve embedded thumbnail previews. Checking directly removes the guesswork.",
+  },
+  {
+    q: "What's the difference between this and Share-Safe?",
+    a: 'Same underlying engine, different shape: Image Meta Stripper handles a whole batch of images at once but has no verify step. Share-Safe walks a single image through inspect, clean, and a final verify step.',
   },
 ];
 
@@ -523,9 +531,9 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
                 <BadgeCheck size={28} />
               </span>
               <div>
-                <span className="tool-kicker">Recommended first step</span>
+                <span className="tool-kicker">One image, guided</span>
                 <h3>Share-Safe Image Cleaner</h3>
-                <p>Strip hidden details, prepare an image, and verify the exported copy before sharing.</p>
+                <p>Inspect, clean, and verify a single image step by step before you send it.</p>
               </div>
             </RouteLink>
             <RouteLink className="tool-card primary-tool" href="/meta-stripper">
@@ -533,9 +541,9 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
                 <ShieldCheck size={28} />
               </span>
               <div>
-                <span className="tool-kicker">Start here</span>
+                <span className="tool-kicker">Batch, multiple images</span>
                 <h3>Image Meta Stripper</h3>
-                <p>Show image metadata, strip it, and download a cleaned copy.</p>
+                <p>Check and strip metadata across many images at once, no verify step.</p>
               </div>
             </RouteLink>
             <RouteLink className="tool-card" href="/compress">
@@ -640,7 +648,11 @@ function ShareSafePage({ RouteLink }: { RouteLink: React.ComponentType<RouteLink
             </div>
             <h1>Prepare an image before sharing</h1>
             <p className="hero-sub">Inspect hidden metadata, create a clean copy, and verify the exported file in this browser. <b>Your original stays on your device.</b></p>
-            <p className="hero-sub">Useful before sending client work, posting a listing photo, or forwarding a screenshot to a support team — anywhere the photo is leaving your hands.</p>
+            <p className="hero-sub">
+              Built for one image at a time, with a verify step at the end that confirms nothing sensitive is left
+              before you send it. Got a whole folder to get through instead?{' '}
+              <RouteLink href="/meta-stripper">Use Image Meta Stripper</RouteLink>.
+            </p>
           </div>
           <RouteLink className="btn btn-ghost" href="/">Suite hub</RouteLink>
         </div>
@@ -749,14 +761,20 @@ function ShareSafePage({ RouteLink }: { RouteLink: React.ComponentType<RouteLink
 function ImageMetaStripperPage({
   RouteLink,
   title = 'Image Meta Stripper',
-  intro = 'Inspect images for common metadata risks, then re-encode a clean copy where your browser supports it.',
-  useCase = 'Useful before publishing a client gallery, listing an item for sale, or sending a photo where you would rather not disclose where it was taken.',
+  intro = 'Check and strip metadata across a whole batch of images at once, right in this browser.',
+  useCase = (
+    <>
+      Built for processing many photos in one pass — a client gallery, a set of listing photos, an export folder —
+      rather than a single guided walkthrough. Only have one image and want a verify step at the end?{' '}
+      <RouteLink href="/share-safe">Use Share-Safe</RouteLink>.
+    </>
+  ),
   variant = 'meta-stripper',
 }: {
   RouteLink: React.ComponentType<RouteLinkProps>;
   title?: string;
   intro?: string;
-  useCase?: string;
+  useCase?: React.ReactNode;
   variant?: 'meta-stripper' | 'remove-gps';
 }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
