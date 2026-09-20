@@ -466,11 +466,7 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
                   <span>Sensitive areas covered</span>
                 </div>
                 <div className="demo-photo">
-                  <span className="demo-person one" />
-                  <span className="demo-person two" />
-                  <span className="demo-box black" />
-                  <span className="demo-box blur" />
-                  <span className="demo-box pixel" />
+                  <img src="/demo/tesla-plate-redacted.jpg" alt="" width={1000} height={666} loading="lazy" />
                 </div>
               </div>
               <div className="demo-panel compress-demo">
