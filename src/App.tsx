@@ -702,6 +702,24 @@ function ShareSafePage({ RouteLink }: { RouteLink: React.ComponentType<RouteLink
                     <div><strong>{report.canClean ? 'Yes' : 'No'}</strong><span>browser cleaning</span></div>
                   </div>
                   {report.findings.length > 0 ? <ul className="finding-list">{report.findings.map((finding) => <li className={`risk-${finding.risk}`} key={finding.key}>{finding.label}</li>)}</ul> : null}
+                  {report.metadata.length > 0 ? (
+                    <div className="metadata-table" aria-label="All metadata fields found">
+                      <div className="metadata-table-head">
+                        <span>Metadata</span>
+                        <span>{report.metadata.length} fields</span>
+                      </div>
+                      <div className="metadata-rows">
+                        {report.metadata.map((entry) => (
+                          <div className="metadata-row" key={`${entry.group}-${entry.tag}`}>
+                            <span className="metadata-key">
+                              {entry.group} / {entry.tag}
+                            </span>
+                            <span className="metadata-value">{entry.value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
                   <div className="share-safe-next"><span>Need to cover something visible in the image?</span><RouteLink className="btn btn-ghost" href="/redact"><ScanLine size={16} /> Open Redactor</RouteLink></div>
                 </div>
               ) : <div className="empty-list privacy-empty">Choose an image to begin the local inspection.</div>}
