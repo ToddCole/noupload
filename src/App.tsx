@@ -13,6 +13,7 @@ import {
   type LucideIcon,
   Loader2,
   Lock,
+  MoveHorizontal,
   ScanLine,
   RotateCcw,
   ShieldCheck,
@@ -640,7 +641,7 @@ function ShareSafePage({ RouteLink }: { RouteLink: React.ComponentType<RouteLink
   return (
     <>
       <section className="tool-hero">
-        <div className="wrap tool-hero-inner">
+        <div className="wrap tool-hero-inner with-demo">
           <div>
             <div className="hero-badges">
               <span className="hero-badge"><BadgeCheck size={15} /> Share-safe workflow</span>
@@ -654,7 +655,46 @@ function ShareSafePage({ RouteLink }: { RouteLink: React.ComponentType<RouteLink
               <RouteLink href="/meta-stripper">Use Image Meta Stripper</RouteLink>.
             </p>
           </div>
-          <RouteLink className="btn btn-ghost" href="/">Suite hub</RouteLink>
+
+          <div className="tool-hero-side">
+            <RouteLink className="btn btn-ghost" href="/">Suite hub</RouteLink>
+
+            <div className="suite-demo tool-hero-demo" aria-label="Real example: inspection result before and after cleaning">
+              <div className="demo-header">
+                <div>
+                  <span>Real example</span>
+                  <strong>Before vs. after cleaning</strong>
+                </div>
+                <span className="demo-status">43 → 5 fields</span>
+              </div>
+
+              <BeforeAfterCompare
+                beforeSrc="/demo/share-safe-dirty.png"
+                afterSrc="/demo/share-safe-clean.png"
+                beforeAlt="Inspection result before cleaning: 43 metadata fields and 4 privacy findings"
+                afterAlt="Inspection result after cleaning: 5 metadata fields and 0 privacy findings"
+                beforeLabel="Before — 43 fields"
+                afterLabel="After — 5 fields"
+              />
+
+              <div className="compare-stats">
+                <div className="compare-stat">
+                  <strong>43 → 5</strong>
+                  <span>metadata fields</span>
+                </div>
+                <div className="compare-stat">
+                  <strong>4 → 0</strong>
+                  <span>privacy findings</span>
+                </div>
+                <div className="compare-stat">
+                  <strong className="is-accent">Yes</strong>
+                  <span>browser cleaning</span>
+                </div>
+              </div>
+
+              <p className="compare-caption">Drag to compare</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1969,6 +2009,59 @@ function ImageCompressorPage({ RouteLink }: { RouteLink: React.ComponentType<Rou
         faqItems={COMPRESSOR_FAQ}
       />
     </>
+  );
+}
+
+function BeforeAfterCompare({
+  beforeSrc,
+  afterSrc,
+  beforeAlt,
+  afterAlt,
+  beforeLabel,
+  afterLabel,
+}: {
+  beforeSrc: string;
+  afterSrc: string;
+  beforeAlt: string;
+  afterAlt: string;
+  beforeLabel: string;
+  afterLabel: string;
+}) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [percent, setPercent] = useState(50);
+
+  const updateFromClientX = useCallback((clientX: number) => {
+    const el = containerRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const pct = ((clientX - rect.left) / rect.width) * 100;
+    setPercent(Math.max(0, Math.min(100, pct)));
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="compare-slider"
+      onPointerDown={(event) => {
+        event.currentTarget.setPointerCapture(event.pointerId);
+        updateFromClientX(event.clientX);
+      }}
+      onPointerMove={(event) => {
+        if (event.buttons !== 1) return;
+        updateFromClientX(event.clientX);
+      }}
+    >
+      <img className="compare-image" src={beforeSrc} alt={beforeAlt} />
+      <span className="compare-tag compare-tag-before">{beforeLabel}</span>
+      <div className="compare-reveal" style={{ clipPath: `inset(0 ${100 - percent}% 0 0)` }}>
+        <img className="compare-image" src={afterSrc} alt={afterAlt} />
+        <span className="compare-tag compare-tag-after">{afterLabel}</span>
+      </div>
+      <div className="compare-divider" style={{ left: `${percent}%` }} />
+      <div className="compare-handle" style={{ left: `${percent}%` }}>
+        <MoveHorizontal size={16} />
+      </div>
+    </div>
   );
 }
 

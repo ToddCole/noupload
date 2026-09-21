@@ -279,6 +279,122 @@ footer .logo-mark img {
   padding: 4px 11px;
 }
 
+.compare-slider {
+  aspect-ratio: 1204 / 985;
+  border-top: 1px solid var(--hairline);
+  cursor: ew-resize;
+  position: relative;
+  touch-action: none;
+  user-select: none;
+  width: 100%;
+}
+
+.compare-image {
+  display: block;
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+}
+
+.compare-reveal {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+}
+
+.compare-tag {
+  background: rgba(9, 17, 31, 0.78);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  color: var(--ash);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  padding: 5px 12px;
+  pointer-events: none;
+  position: absolute;
+  top: 12px;
+}
+
+.compare-tag-before {
+  left: 12px;
+}
+
+.compare-tag-after {
+  color: var(--accent-bright);
+  right: 12px;
+}
+
+.compare-divider {
+  background: var(--paper);
+  bottom: 0;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transform: translateX(-1px);
+  width: 2px;
+}
+
+.compare-handle {
+  align-items: center;
+  background: var(--paper);
+  border-radius: 999px;
+  box-shadow: 0 24px 80px rgba(2, 6, 23, 0.45);
+  color: var(--ink);
+  display: flex;
+  height: 36px;
+  justify-content: center;
+  margin-left: -18px;
+  margin-top: -18px;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  width: 36px;
+}
+
+.compare-stats {
+  border-top: 1px solid var(--hairline);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.compare-stat {
+  border-right: 1px solid var(--hairline);
+  padding: 16px 20px;
+}
+
+.compare-stat:last-child {
+  border-right: 0;
+}
+
+.compare-stat strong {
+  color: var(--paper);
+  display: block;
+  font-size: 1.3rem;
+}
+
+.compare-stat strong.is-accent {
+  color: var(--accent-bright);
+}
+
+.compare-stat span {
+  color: var(--ash);
+  display: block;
+  font-size: 0.76rem;
+  margin-top: 2px;
+}
+
+.compare-caption {
+  color: var(--ash);
+  font-size: 0.76rem;
+  padding: 12px 0 18px;
+  text-align: center;
+}
+
 .suite-hero-copy {
   max-width: 720px;
 }
