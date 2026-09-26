@@ -9,6 +9,7 @@ describe('sitemap', () => {
     expect(sitemap).toContain('<loc>https://noupload.services/remove-gps-from-photo</loc>');
     expect(sitemap).toContain('<loc>https://noupload.services/redact</loc>');
     expect(sitemap).toContain('<loc>https://noupload.services/compress</loc>');
+    expect(sitemap).toContain('<loc>https://noupload.services/crop</loc>');
     expect(sitemap).not.toContain('privacy-check');
   });
 });

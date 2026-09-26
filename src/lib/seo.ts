@@ -37,6 +37,11 @@ export const SEO_BY_ROUTE = {
       'Manually cover faces, names, addresses, plates, tokens, and other sensitive image areas locally in your browser before sharing.',
     path: '/redact',
   },
+  '/crop': {
+    title: 'Crop & Resize | NoUpload',
+    description: 'Crop one photo into featured images and social sizes. Adjust each crop and export exact dimensions locally in your browser.',
+    path: '/crop',
+  },
   '/compress': {
     title: 'Image Compressor - Compress Images Locally | NoUpload',
     description:

@@ -22,6 +22,7 @@ import {
   Upload,
   X,
 } from 'lucide-react';
+import { CropWorkspace } from './components/CropWorkspace';
 import { downloadBlob } from './lib/download';
 import {
   bytesToLabel,
@@ -54,7 +55,7 @@ import {
 import { applySeo, SEO_BY_ROUTE } from './lib/seo';
 import { initAnalytics, trackImageExport } from './lib/analytics';
 
-export type RoutePath = '/' | '/share-safe' | '/remove-gps-from-photo' | '/meta-stripper' | '/redact' | '/compress';
+export type RoutePath = '/' | '/share-safe' | '/remove-gps-from-photo' | '/meta-stripper' | '/redact' | '/compress' | '/crop';
 
 interface RouteLinkProps {
   href: RoutePath | string;
@@ -332,7 +333,7 @@ export function App({ initialRoute }: { initialRoute?: RoutePath } = {}) {
   }, []);
 
   const RouteLink = ({ href, className, children }: RouteLinkProps) => {
-    const isInternal = href === '/' || href === '/share-safe' || href === '/remove-gps-from-photo' || href === '/meta-stripper' || href === '/redact' || href === '/compress';
+    const isInternal = href === '/' || href === '/share-safe' || href === '/remove-gps-from-photo' || href === '/meta-stripper' || href === '/redact' || href === '/compress' || href === '/crop';
     return (
       <a
         className={className}
@@ -358,6 +359,7 @@ export function App({ initialRoute }: { initialRoute?: RoutePath } = {}) {
             <img src="/logo.png" alt="NoUpload" />
           </RouteLink>
           <nav className="nav-actions">
+            <RouteLink className={`nav-link ${route === '/crop' ? 'is-active' : ''}`} href="/crop">Crop &amp; Resize</RouteLink>
             <RouteLink className={`nav-link ${route === '/compress' ? 'is-active' : ''}`} href="/compress">
               Image Compressor
             </RouteLink>
@@ -375,6 +377,7 @@ export function App({ initialRoute }: { initialRoute?: RoutePath } = {}) {
       </header>
 
       <main id="top">
+        {route === '/crop' ? <CropWorkspace /> : null}
         {route === '/' ? <HubPage RouteLink={RouteLink} /> : null}
         {route === '/share-safe' ? <ShareSafePage RouteLink={RouteLink} /> : null}
         {route === '/remove-gps-from-photo' ? (
@@ -547,6 +550,7 @@ function HubPage({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps>
                 <p>Check and strip metadata across many images at once, no verify step.</p>
               </div>
             </RouteLink>
+            <RouteLink className="tool-card" href="/crop"><span className="tool-icon"><ImageIcon size={28} /></span><div><span className="tool-kicker">One photo, many sizes</span><h3>Crop &amp; Resize</h3><p>Frame featured images and social versions, then download them together.</p></div></RouteLink>
             <RouteLink className="tool-card" href="/compress">
               <span className="tool-icon">
                 <ImageIcon size={28} />
@@ -2210,6 +2214,7 @@ function Footer({ RouteLink }: { RouteLink: React.ComponentType<RouteLinkProps> 
           <RouteLink href="/remove-gps-from-photo">Remove GPS from Photos</RouteLink>
           <RouteLink href="/meta-stripper">Image Meta Stripper</RouteLink>
           <RouteLink href="/redact">Image Redactor</RouteLink>
+          <RouteLink href="/crop">Crop &amp; Resize</RouteLink>
           <RouteLink href="/compress">Image Compressor</RouteLink>
           <a href="#legal">Privacy &amp; terms</a>
           <a href="https://github.com/ToddCole/noupload" target="_blank" rel="noreferrer">
@@ -2268,6 +2273,7 @@ function normalizeRoute(pathname: string): RoutePath {
   if (path === '/redact') {
     return '/redact';
   }
+  if (path === '/crop') return '/crop';
   if (path === '/compress') {
     return '/compress';
   }

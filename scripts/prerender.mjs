@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const ROUTES = {
   '/': 'index.html',
+  '/crop': 'crop/index.html',
   '/compress': 'compress/index.html',
   '/share-safe': 'share-safe/index.html',
   '/meta-stripper': 'meta-stripper/index.html',

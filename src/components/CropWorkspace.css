@@ -1,0 +1,52 @@
+.crop-workspace.wrap { padding-top: 30px; padding-bottom: 40px; }
+.crop-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px; }
+.crop-heading h1 { font-size:clamp(25px, 4vw, 36px); }
+.crop-heading p { color:var(--ash); margin-top:6px; }
+.crop-layout { display:grid; grid-template-columns:260px minmax(0,1fr); gap:24px; align-items:start; }
+.crop-panel, .crop-editor { border:1px solid var(--hairline-strong); border-radius:16px; background:var(--ink-2); padding:20px; min-width:0; }
+.crop-panel h2, .crop-editor h2, .crop-results h2 { font-size:18px; }
+.crop-hint { font-size:12px; color:var(--ash); line-height:1.6; margin-top:8px; }
+.crop-presets { display:grid; gap:8px; margin:18px 0 24px; }
+.crop-preset { display:flex; align-items:center; gap:10px; border:1px solid var(--hairline); border-radius:10px; padding:10px; }
+.crop-preset.is-active { background:var(--accent-dim); border-color:var(--accent); }
+.crop-preset input { width:18px; height:18px; accent-color:var(--accent); flex-shrink:0; }
+.crop-preset button { text-align:left; flex:1; padding:2px; min-width:0; }
+.crop-preset strong, .crop-preset span { display:block; overflow-wrap:anywhere; }
+.crop-preset span { font-size:11px; color:var(--ash); margin-top:4px; }
+.crop-field { display:flex; flex-direction:column; gap:8px; font-size:12px; font-weight:600; min-width:0; }
+.crop-field input:not([type=range]), .crop-field select { width:100%; background:var(--tray); color:var(--paper); border:1px solid var(--hairline-strong); border-radius:7px; padding:10px; min-width:0; }
+.crop-field input[type=range] { width:100%; accent-color:var(--accent); }
+.crop-export { width:100%; margin-top:22px; }
+.crop-editor-title { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; }
+.crop-editor-title span { color:var(--ash); font-size:12px; }
+.crop-stage { display:flex; align-items:center; justify-content:center; background:#060b13; border-radius:10px; padding:12px; min-height:230px; }
+.crop-canvas { display:block; max-width:100%; max-height:490px; width:auto; height:auto; cursor:grab; touch-action:none; background:repeating-conic-gradient(#273345 0% 25%,#182131 0% 50%) 0/20px 20px; }
+.crop-canvas:active { cursor:grabbing; }
+.crop-position-controls { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:14px; }
+.crop-position-controls label { display:flex; align-items:center; gap:12px; font-size:12px; flex:1; }
+.crop-position-controls input { width:100%; accent-color:var(--accent); }
+.crop-empty { width:100%; min-height:300px; border:1px dashed var(--hairline-strong); border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; background:var(--tray); }
+.crop-empty svg { color:var(--accent-bright); }
+.crop-empty span { color:var(--ash); font-size:12px; padding:0 12px; }
+.crop-settings { border:0; border-top:1px solid var(--hairline); margin:24px 0 0; padding:16px 0 0; display:grid; gap:14px; min-width:0; }
+.crop-settings legend { color:var(--ash); font-size:12px; padding:0 8px 0 0; }
+.crop-dimensions { display:flex; gap:14px; }
+.crop-dimensions > * { flex:1; }
+.crop-warning { font-size:12px; color:#fbbf24; margin-top:8px; }
+.crop-error { color:#fda4af; background:#361923; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px; }
+.crop-results { margin-top:24px; padding:20px; background:var(--tray); border-radius:16px; }
+.crop-result { display:flex; justify-content:space-between; gap:16px; align-items:center; padding:14px 0; border-top:1px solid var(--hairline); }
+.crop-result strong { font-size:13px; overflow-wrap:anywhere; }
+.crop-result p { color:var(--ash); font-size:12px; margin-top:5px; }
+.crop-local-note { color:var(--ash); font-size:12px; text-align:center; margin-top:24px; }
+.crop-sr-only { position:absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@media(max-width:760px) {
+  .crop-workspace.wrap { padding-left:16px; padding-right:16px; }
+  .crop-layout { grid-template-columns:1fr; gap:16px; }
+  .crop-presets { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .crop-panel, .crop-editor { padding:16px; }
+  .crop-heading { flex-wrap:wrap; }
+  .crop-canvas { max-height:400px; }
+  .crop-position-controls { flex-wrap:wrap; }
+  .crop-result { align-items:flex-start; }
+}

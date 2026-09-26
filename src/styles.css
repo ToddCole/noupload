@@ -2139,6 +2139,9 @@ input[type="range"] {
 }
 
 @media (max-width: 940px) {
+  .site-header .wrap { height: auto; min-height: 104px; flex-wrap: wrap; gap: 12px; padding-top: 12px; padding-bottom: 12px; }
+  .nav-actions { flex-wrap: wrap; gap: 12px 20px; }
+
   .tool-grid {
     grid-template-columns: 1fr;
     grid-template-rows: auto;

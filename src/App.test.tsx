@@ -11,6 +11,13 @@ afterEach(() => {
 });
 
 describe('app routes', () => {
+  it('renders the crop workspace on a direct trailing-slash route', () => {
+    window.history.replaceState({}, '', '/crop/');
+    render(<App />);
+    expect(screen.getByRole('heading', { name: 'Crop & Resize' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Prepare 1 version' })).toBeDisabled();
+    expect(document.title).toBe('Crop & Resize | NoUpload');
+  });
   it('renders the suite hub at /', () => {
     window.history.replaceState({}, '', '/');
     render(<App />);

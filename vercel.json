@@ -51,6 +51,14 @@
     {
       "source": "/compress/",
       "destination": "/compress/index.html"
+    },
+    {
+      "source": "/crop",
+      "destination": "/crop/index.html"
+    },
+    {
+      "source": "/crop/",
+      "destination": "/crop/index.html"
     }
   ],
   "headers": [

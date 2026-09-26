@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import cropHtml from '../../crop/index.html?raw';
 import compressHtml from '../../compress/index.html?raw';
 import homeHtml from '../../index.html?raw';
 import metaStripperHtml from '../../meta-stripper/index.html?raw';
@@ -74,6 +75,11 @@ describe('seo helpers', () => {
     expect(redactHtml).toContain('<title>Image Redactor - Redact Images Locally | NoUpload</title>');
     expect(redactHtml).toContain('<link rel="canonical" href="https://noupload.services/redact" />');
     expect(redactHtml).toContain('<meta property="og:url" content="https://noupload.services/redact" />');
+    expect(cropHtml).toContain('<title>Crop &amp; Resize | NoUpload</title>');
+    expect(cropHtml).toContain('https://noupload.services/crop');
+    const rewrites = JSON.parse(vercelConfig).rewrites;
+    expect(rewrites).toContainEqual({ source: '/crop', destination: '/crop/index.html' });
+    expect(rewrites).toContainEqual({ source: '/crop/', destination: '/crop/index.html' });
     expect(compressHtml).toContain('<title>Image Compressor - Compress Images Locally | NoUpload</title>');
     expect(compressHtml).toContain('<link rel="canonical" href="https://noupload.services/compress" />');
     expect(compressHtml).toContain('<meta property="og:url" content="https://noupload.services/compress" />');
